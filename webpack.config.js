@@ -12,12 +12,20 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/build/'
   },
-  module: {
+  module: {  
     rules: [
       {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         include: path.join(__dirname, 'src')
+      },
+      {
+        test: [/\.svg$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+        loader: require.resolve('url-loader'),
+        options: {
+          limit: 10000,
+          name: 'static/media/[name].[hash:8].[ext]',
+        },
       },
       {
         test: /\.scss$/,
