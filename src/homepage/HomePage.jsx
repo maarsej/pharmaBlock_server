@@ -27,10 +27,11 @@ class HomePage extends Component {
         </div>
 
         <MissionStatement />
-
+       
         <Audience />
 
         <Team />
+
       </div>
     );
   }
