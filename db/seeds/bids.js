@@ -6,8 +6,8 @@ exports.seed = function(knex, Promise) {
       return Promise.all([
         // Inserts seed entries
         knex('bids').insert({
-          pharmaco_address: '0x0000000000000000000000000000000000000003',
-          contract_address: '0x0000000000000000000000000000000000000001',
+          pharmaco_pubaddr: '0x0000000000000000000000000000000000000003',
+          contract_pubaddr: '0x0000000000000000000000000000000000000001',
           price_per_mg: 3
         })
       ]);

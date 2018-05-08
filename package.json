@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/saunderst/LHL_final"
+    "url": "https://github.com/maarsej/pharmaBlock"
   },
   "keywords": [
     "react",
@@ -25,9 +25,9 @@
   "author": "",
   "license": "",
   "bugs": {
-    "url": "https://github.com/saunderst/LHL_final/issues"
+    "url": "https://github.com/maarsej/pharmaBlock/issues"
   },
-  "homepage": "https://github.com/saunderst/LHL_final",
+  "homepage": "https://github.com/maarsej/pharmaBlock",
   "engines": {
     "node": ">=6.0.0"
   },
@@ -40,6 +40,8 @@
     "css-loader": "0.26.1",
     "eslint": "3.15.0",
     "eslint-plugin-react": "6.9.0",
+    "knex": "^0.11.7",
+    "knex-logger": "^0.1.0",
     "node-sass": "4.5.0",
     "sass-loader": "6.0.0",
     "sockjs-client": "^1.1.2",
@@ -53,8 +55,7 @@
     "cookie-session": "^2.0.0-beta.3",
     "dotenv": "^2.0.0",
     "express": "^4.13.4",
-    "knex": "^0.11.7",
-    "knex-logger": "^0.1.0",
+    "knex": "^0.14.6",
     "minipass": "^2.3.0",
     "morgan": "^1.7.0",
     "node-pre-gyp": "^0.10.0",

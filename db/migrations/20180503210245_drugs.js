@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
   return knex.schema.createTable('drugs', function (table) {
     table.increments();
-    table.string('pharmaco_address');
+    table.string('pharmaco_pubaddr');
     table.string('brand_name');
     table.string('generic_name');
     table.integer('price_per_mg');
