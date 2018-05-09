@@ -1,0 +1,16 @@
+<script>
+var url = 'http://localhost:8080/patient/login';
+var data = {username: '1234@gmail.com', password: 'drugs99'};
+
+console.log('trying...', data, JSON.stringify(data));
+fetch(url, {
+  Origin: 'http://localhost:8080',
+  method: 'POST', // or 'PUT'
+  body: data, // data can be `string` or {object}!
+  headers: new Headers({
+    'Content-Type': 'multipart/form-data'
+  })
+}).then(res => res.json())
+.catch(error => console.error('Error:', error))
+.then(response => console.log('Success:', response));
+</script>
