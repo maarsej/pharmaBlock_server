@@ -13,7 +13,7 @@ module.exports = (knex) => {
       if (qres.length === 1) {
         if (bcrypt.compareSync(req.body.password, qres[0].password)) {
           req.session.userId = qres[0].public_address;
-          res.status(200).json({userId: req.session.userId, name: qres[0].name, type: 'patient'});
+          res.status(200).json({userId: req.session.userId, name: qres[0].name, userType: 'patient'});
         } else {
           res.status(401);  // found patient, but password failed
         }
@@ -23,7 +23,7 @@ module.exports = (knex) => {
           if (qres.length === 1) {
             if (bcrypt.compareSync(req.body.password, qres[0].password)) {
               req.session.userId = qres[0].public_address;
-              res.status(200).json({userId: req.session.userId, name: qres[0].company_name, type: 'pharma'});
+              res.status(200).json({userId: req.session.userId, name: qres[0].company_name, userType: 'pharma'});
             } else {
               res.status(401);  // found pharmaco, but password failed
             }
