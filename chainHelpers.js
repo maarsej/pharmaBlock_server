@@ -3,6 +3,8 @@ const Web3 = require('web3');
 const contract = require('truffle-contract');
 
 const prescription_artifacts = require('./build/contracts/Prescription.json')
+const filledprescription_artifacts = require('./build/contracts/filledPrescription.json')
+
 const EROFS = require('constants').EROFS
 // import { default as Web3 } from 'web3';
 // import { default as contract } from 'truffle-contract'
@@ -10,8 +12,10 @@ const EROFS = require('constants').EROFS
 // import prescription_artifacts from '../../build/contracts/Prescription.json'
 // import { EROFS } from "constants";
 
+
 // Contract object
-var Prescription = contract(prescription_artifacts);
+const Prescription = contract(prescription_artifacts);
+const filledPrescription = contract(filledprescription_artifacts);
 
 let values = { "drugID": "field-1", "dosage": "field-2", "numberOfDoses": "field-3", "frequencyOfDose": "field-4" }
 
@@ -31,53 +35,76 @@ setProvider = function () {
     }
 
     Prescription.setProvider(web3.currentProvider);
+    filledPrescription.setProvider(web3.currentProvider);
 }
 
 
+
+findFilled = function (id) {
+    setProvider();
+    Prescription.setProvider(web3.currentProvider);
+    const contractInstance = filledPrescription.at(id); //0xd49bDC6802Acc58931591749607ad08cb13F8e67
+    contractInstance.getInfo.call().then(function (v) {
+        // console.log(v);
+        return v;
+    }).catch((error) => {
+        console.log(error)
+    });
+}
 
 find = function (id) {
     setProvider();
-    let values = { "drugID": "field-1", "dosage": "field-2", "numberOfDoses": "field-3", "frequencyOfDose": "field-4", "costPerDose": "field-5" }
     Prescription.setProvider(web3.currentProvider);
-    let valueNames = Object.keys(values);
-    for (var i = 0; i < valueNames.length; i++) {
-        let value = valueNames[i];
-        const contractInstance = Prescription.at(id); //0xd49bDC6802Acc58931591749607ad08cb13F8e67
-        contractInstance[value].call().then(function (v) {
-            console.log(`${value}: `, v);
-        }).catch((error) => {
-            console.log(error)
-        });
-    }
+    const contractInstance = Prescription.at(id); //0xd49bDC6802Acc58931591749607ad08cb13F8e67
+    contractInstance.getInfo.call().then(function (v) {
+        // console.log(v);
+        return v;
+    }).catch((error) => {
+        console.log(error)
+    });
 }
 
-create = function (drugID, dosage, numberOfDoses, frequencyOfDose) {
-    let currentUser = "0xBb16559B164e4f0B872caAA640Dc1CCbf1f3E8b2"
+create = function (currentUser, drugID, dosage, numberOfDoses, frequencyOfDose) {
     setProvider(); // not sure how to handle telling it how to access webmask
     Prescription.new(drugID, dosage, numberOfDoses, frequencyOfDose, { from: currentUser, gas: 6000000 }).then(instance => {
-        var checkAddress = setInterval(() => {
+        let checkAddress = setInterval(() => {
             if (instance.address) {
                 console.log("Contract address: " + instance.address);
                 clearInterval(checkAddress)
+                return instance.address;
             }
         }, 100);
     }).catch((error) => {
         console.log(error)
     });
-    console.log("contract creating...")
 }
 
-sign = function (id, costPerDose, startDate, endDate, pharmaPubAddr) {
+sign = function (id, currentUser, costPerDose, startDate, endDate, pharmaPubAddr) {
     setProvider();
-    Prescription.setProvider(web3.currentProvider);
-    const contractInstance = Prescription.at(id); //0xd49bDC6802Acc58931591749607ad08cb13F8e67
-    contractInstance.providerSignWithTerms.call(costPerDose, startDate, endDate, pharmaPubAddr).then((response) => {
-        console.log(response)
-        contractInstance.costPerDose.call().then((v) => {
-            console.log("costPerDose: ", v)
+    const contractInstance = Prescription.at(id); //0xac68dB96A9E756a83AEC20d47DbeE90017a05bF2
+    contractInstance.getInfo.call().then((output) => {
+        filledPrescription.new(output[0], output[1], output[2], output[3], costPerDose, startDate, endDate, pharmaPubAddr, { from: currentUser, gas: 6000000 }).then(instance => {
+            let checkAddress = setInterval(() => {
+                if (instance.address) {
+                    console.log("Contract address: " + instance.address);
+                    clearInterval(checkAddress)
+                    return instance.address;
+                }
+            }, 100);
         }).catch((error) => {
             console.log(error)
-        })
+        });
+    }).catch((error) => {
+        console.log(error)
+    })
+}
+
+pay = function (id,value) {
+    setProvider();
+    Prescription.setProvider(web3.currentProvider);
+    const contractInstance = filledPrescription.at(id); //0xd49bDC6802Acc58931591749607ad08cb13F8e67
+    contractInstance.pay.call({value: value}).then(function () {
+        console.log('successfully payed: ', value)
     }).catch((error) => {
         console.log(error)
     });
@@ -87,6 +114,8 @@ const blockFunc = {
     create: create,
     find: find,
     sign: sign,
+    findFilled: findFilled,
+    pay: pay,
 
 }
 

@@ -17,11 +17,13 @@
 // };
 
 const Prescription = artifacts.require("./Prescription.sol");
+const filledPrescription = artifacts.require("./filledPrescription.sol");
 
 //accounts[0] = "0xBb16559B164e4f0B872caAA640Dc1CCbf1f3E8b2";
 //accounts[1] = "0xa273e1C1Bd3FBC09b5274B2a2319193cd7298873";
 
 module.exports = function(deployer, network, accounts) {
   deployer.deploy(Prescription, 123, 100, 30, 1, {from: accounts[0], gas: 1000000}),
-  deployer.deploy(Prescription, 456, 120, 60, 2, {from: accounts[1], gas: 1000000})
+  deployer.deploy(Prescription, 456, 120, 60, 2, {from: accounts[1], gas: 1000000}),
+  deployer.deploy(filledPrescription, 123, 100, 30, 1, 69, 17, 93, accounts[3], {from: accounts[0], gas: 1000000})
 }

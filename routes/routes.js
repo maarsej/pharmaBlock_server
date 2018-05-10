@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors')
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const block = require('../chainHelpers.js');
+
 
 router.all('*', cors());
 
