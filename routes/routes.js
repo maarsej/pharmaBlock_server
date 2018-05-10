@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors')
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const block = require('../chainHelpers.js');
+
 
 router.all('*', cors());
 
@@ -45,7 +47,7 @@ module.exports = (knex) => {
   });
 
   // basic patient contract info
-  router.get('/patient/:public_address/contracts', (req, res) => {
+  router.get('/patients/:public_address/contracts', (req, res) => {
     knex('contracts')
       .join('drugs', 'drugs.id', 'contracts.drug_id')
       .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
@@ -55,7 +57,7 @@ module.exports = (knex) => {
   });
 
   // patient info
-  router.get('/patient/:public_address', (req, res) => {
+  router.get('/patients/:public_address', (req, res) => {
     knex.select('public_address', 'email', 'name', 'address', 'city', 'postal_code')
       .from('patients')
       .where('public_address', req.params.public_address)
@@ -64,7 +66,7 @@ module.exports = (knex) => {
   });
 
   // basic pharmaceutical company contract info
-  router.get('/pharmaco/:public_address/contracts', (req, res) => {
+  router.get('/pharmacos/:public_address/contracts', (req, res) => {
     knex('contracts')
       .join('drugs', 'drugs.id', 'contracts.drug_id')
       .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
@@ -74,7 +76,7 @@ module.exports = (knex) => {
   });
 
   // pharmaceutical company info
-  router.get('/pharmaco/:public_address', (req, res) => {
+  router.get('/pharmacos/:public_address', (req, res) => {
     knex.select('company_name', 'contact_name', 'email', 'address', 'city', 'postal_code')
       .from('pharmacos')
       .where('public_address', req.params.public_address)
