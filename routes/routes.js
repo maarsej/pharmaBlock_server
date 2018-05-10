@@ -8,22 +8,22 @@ router.all('*', cors());
 module.exports = (knex) => {
 
   router.post('/login', (req, res) => {
-    knex.select('public_address', 'password').from('patients').where('email', req.body.email)
+    knex.select('public_address', 'name', 'password').from('patients').where('email', req.body.email)
     .then((qres) => {
       if (qres.length === 1) {
         if (bcrypt.compareSync(req.body.password, qres[0].password)) {
           req.session.userId = qres[0].public_address;
-          res.status(200).json({userId: req.session.userId, type: 'patient'});
+          res.status(200).json({userId: req.session.userId, name: qres[0].name, type: 'patient'});
         } else {
           res.status(401);  // found patient, but password failed
         }
       } else {
-        knex.select('public_address', 'password').from('pharmacos').where('email', req.body.email)
+        knex.select('public_address', 'company_name', 'password').from('pharmacos').where('email', req.body.email)
         .then((qres) => {
           if (qres.length === 1) {
             if (bcrypt.compareSync(req.body.password, qres[0].password)) {
               req.session.userId = qres[0].public_address;
-              res.status(200).json({userId: req.session.userId, type: 'pharma'});
+              res.status(200).json({userId: req.session.userId, name: qres[0].company_name, type: 'pharma'});
             } else {
               res.status(401);  // found pharmaco, but password failed
             }

@@ -7,19 +7,19 @@ exports.seed = function(knex, Promise) {
       return Promise.all([
         // Inserts seed entries
         knex('patients').insert({
-          public_address: '0xBb16559B164e4f0B872caAA640Dc1CCbf1f3E8b2', email: '1234@gmail.com', password: bcrypt.hashSync('drugs99', 10)
+          public_address: '0xBb16559B164e4f0B872caAA640Dc1CCbf1f3E8b2', email: '1234@gmail.com', name: 'Mareli Brooks', password: bcrypt.hashSync('drugs99', 10)
         }),
         knex('patients').insert({
-          public_address: '0xa273e1C1Bd3FBC09b5274B2a2319193cd7298873', email: '1235@gmail.com', password: bcrypt.hashSync('drugs991', 10)
+          public_address: '0xa273e1C1Bd3FBC09b5274B2a2319193cd7298873', email: '1235@gmail.com', name: 'Clayton Chavez', password: bcrypt.hashSync('drugs991', 10)
         }),
         knex('patients').insert({
-          public_address: '0x6268c4b8490beA0880c6CC7fFFB8362c2D3B5Ff4', email: '1236@gmail.com', password: bcrypt.hashSync('drugs992', 10)
+          public_address: '0x6268c4b8490beA0880c6CC7fFFB8362c2D3B5Ff4', email: '1236@gmail.com', name: 'Trevin Zavala', password: bcrypt.hashSync('drugs992', 10)
         }),
         knex('patients').insert({
-          public_address: '0xe511708661CfAE7ae3C8Ae69810369cBA37BcE6b', email: '1237@gmail.com', password: bcrypt.hashSync('drugs993', 10)
+          public_address: '0xe511708661CfAE7ae3C8Ae69810369cBA37BcE6b', email: '1237@gmail.com', name: 'Taylor Shea', password: bcrypt.hashSync('drugs993', 10)
         }),
         knex('patients').insert({
-          public_address: '0xB3AA28edf71914e0d92f56B27d5340446Bbd0b59', email: '1238@gmail.com', password: bcrypt.hashSync('drugs994', 10)
+          public_address: '0xB3AA28edf71914e0d92f56B27d5340446Bbd0b59', email: '1238@gmail.com', name: 'Asia Walters', password: bcrypt.hashSync('drugs994', 10)
         }),
        ]);
     });
