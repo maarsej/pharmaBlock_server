@@ -46,7 +46,45 @@ module.exports = (knex) => {
     res.status(200).send('<h1>Here it is.</h1>');
   });
 
-  // return all contracts for patient [{id: cId, name: res.brand_name, company: res.company_name + blockchain info } ...]
+  // returns specific contract by contract id
+  router.get('patients/:public_address/contracts/:cId', (req, res) => {
+    knex.select()
+      .from('contracts')
+      .where('contract_address', req.params.cId)
+      .then(qres => res.json(qres));
+      // getInfo for contract @ cId
+      // return info
+  });
+
+  // fill prescription (accept bid)
+  router.post('/patients/:public_address/contracts/:oldcId', (req, res) => {
+      // expecting bid info
+      // get info from old Prescription contract @ oldcID
+      // fillPrescription.new get newCID
+
+      //db concerns
+      // add new contract to database @ newCID AND delete contract from database @ oldcID
+    cIdofNewContract = '0x0000000000000000000000000000000000000002';  // dummy for testing
+    drugIdofNewContract = 1;  // dummy for testing
+    endDateofNewContract = '2018-05-18';  // dummy for testing
+    knex('contracts')
+    .where('public_address', req.params.oldcId)
+    .del()
+    .then(() => {
+      knex('contracts')
+      .returning('id')
+      .insert({
+        public_address: cIdofNewContract,
+        patient_pubaddr: req.params.public_address,
+        drug_id: drugIdofNewContract,
+        end_date: endDateofNewContract
+      })
+      .then(qres => res.json(qres));
+    });
+      //return all contracts as a follow up request from front end
+  });
+
+   // return all contracts for patient [{id: cId, name: res.brand_name, company: res.company_name + blockchain info } ...]
   router.get('/patients/:public_address/contracts', (req, res) => {
     knex('contracts')
       .join('drugs', 'drugs.id', 'contracts.drug_id')
@@ -61,37 +99,44 @@ module.exports = (knex) => {
   });
   
   // create prescription, submit bids from companies with that drug id, return all contracts
-  router.post('patients/:public_address/contracts', (req, res) => {
+  router.post('/patients/:public_address/contracts', (req, res) => {
     // expecting prescription info
     //create Prescription.new
     // wait for contractAddress
 
     //db concerns
+    cIdofNewContract = '0x0000000000000000000000000000000000000001';  // dummy for testing
+    drugIdofNewContract = 3;  // dummy for testing
+    knex('contracts')
+    .returning('id')
+    .insert({
+      public_address: cIdofNewContract,
+      patient_pubaddr: req.params.public_address,
+      drug_id: drugIdofNewContract
+    })
+    .then(qres => res.json(qres));
+
     //add it to the database @user with :public_address
-    // submit bids from pharmacos (helper function)
+    // submit bids from pharmacos (helper function calls 'post bid' route below)
     //return all contracts as a follow up request from front end
   });
 
-
-  // returns specific contract by contract id
-  router.get('patients/:public_address/contracts/:cId', (req, res) => {
-    knex.select()
-      .from('contracts')
-      .where('contract_address', req.params.cId)
-      .then(qres => res.json(qres));
-      // getInfo for contract @ cId
-      // return info
-  });
-
-  // fill prescription (accept bid)
-  router.post('patients/:public_address/contracts/:oldcId', (req, res) => {
-      // expecting bid info
-      // get info from old Prescription contract @ oldcID
-      // fillPrescription.new get newCID
-
-      //db concerns
-      // add new contract to database @ newCID AND delete contract from database @ oldcID
-      //return all contracts as a follow up request from front end
+  router.post('/pharmaco/:pharmaco_pubaddr/bid/:cId', (req, res) => {
+    knex('contracts')
+    .join('drugs', 'contracts.drug_id', 'drugs.id')
+    .where('contracts.public_address', req.params.cId)
+    .andwhere('drugs.pharmaco_pubaddr', req.params.pharmaco_pubaddr)
+    .select('drugs.price_per_mg')
+    .then(qres => {
+      return knex('bids')
+      .returning('id')
+      .insert({
+        pharmaco_pubaddr: pharmaco_address,
+        contract_pubaddr: cId,
+        price_per_mg: qres.price_per_mg
+      });
+    })
+    .then(qres => res.json(qres));
   });
 
   // patient info
@@ -99,8 +144,7 @@ module.exports = (knex) => {
     knex.select('public_address', 'email', 'name', 'address', 'city', 'postal_code')
       .from('patients')
       .where('public_address', req.params.public_address)
-      .then((qres) => { console.log('qres', qres); res.json(qres) })
-      .catch((err) => console.log(err));
+      .then((qres) => res.json(qres));
   });
 
   // basic pharmaceutical company, all contracts info
