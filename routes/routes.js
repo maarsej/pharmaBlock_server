@@ -53,23 +53,30 @@ module.exports = (knex) => {
       .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
       .select('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.brand_name')
       .where('patient_pubaddr', req.params.public_address)
-      /* .then((qres) => {
-        qres.map((contract) => { // maybe use a map (spread object add to it from blockchain response)
-          getInfo for every contract using block chain helpers
-          return s
+      .then((qres) => {
+        let response = qres.map((contract) => {
+          if (contracts.end_date) {
+            let bArr = block.findFilled(contract.cId);
+            output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
+            return output;
+          } else {
+            let blockInfoArray = block.find(contract.cId);
+            output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
+            return output;
+          }
         })
-      }) */
-      .then(qres => res.json(qres));
+        return response
+      })
+      .then(response => res.json(response));
   });
 
   // create prescription, submit bids from companies with that drug id, return all contracts
   router.post('patients/:public_address/contracts', (req, res) => {
-    // expecting prescription info
-    //create Prescription.new
-    // wait for contractAddress
 
+    let contractAddress = block.create(req.drugId, req.dosage, req.numberOfDoses, req.frequencyOfDose);
+ 
     //db concerns
-    //add it to the database @user with :public_address
+    //add contractAddress to the database @user with :public_address
     // submit bids from pharmacos (helper function)
     //return all contracts as a follow up request from front end
   });
@@ -80,19 +87,38 @@ module.exports = (knex) => {
     knex.select()
       .from('contracts')
       .where('contract_address', req.params.cId)
-      .then(qres => res.json(qres));
-    // getInfo for contract @ cId
-    // return info
+
+      //ASSUMING THIS RETURNS AN ARRAY WITH ONE OBJECT
+      
+      .then((qres) => {
+        let response = qres.map((contract) => {
+          if (contracts.end_date) {
+            let bArr = block.findFilled(contract.cId);
+            output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
+            return output;
+          } else {
+            let blockInfoArray = block.find(contract.cId);
+            output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
+            return output;
+          }
+        })
+        return response
+      })
+      .then(response => res.json(response));
   });
 
   // fill prescription (accept bid)
-  router.post('patients/:public_address/contracts/:oldcId', (req, res) => {
+  router.post('patients/:public_address/contracts/:oldCId', (req, res) => {
     // expecting bid info
     // get info from old Prescription contract @ oldcID
     // fillPrescription.new get newCID
+    let info = block.find(req.params.oldCId)
+    let newCId = block.sign(info.drugId, info.dosage, info.numberOfDoses, info.frequencyOfDose,
+                            req.costPerDose, req.startDate, req.endDate, req.pharma_address);
 
     //db concerns
-    // add new contract to database @ newCID AND delete contract from database @ oldcID
+    // add new contract to database @ newCId with end_date
+    // AND delete contract from database @ oldCId
     //return all contracts as a follow up request from front end
   });
 
@@ -110,13 +136,23 @@ module.exports = (knex) => {
     knex('contracts')
       .join('drugs', 'drugs.id', 'contracts.drug_id')
       .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-      .select('contracts.public_address', 'pharmacos.company_name', 'drugs.brand_name')
+      .select('contracts.public_address', 'contracts.end_date', 'pharmacos.company_name', 'drugs.brand_name')
       .where('contracts.pharmaco_pubaddr', req.params.public_address)
-      // .then(qres => qres.forEach((contract) => { // maybe use a map (spread object add to it from blockchain response)
-      //getInfo for every contract using block chain helpers
-      //return s
-      // }))
-      .then(qres => res.json(qres));
+      .then((qres) => {
+        let response = qres.map((contract) => { 
+          if (contracts.end_date) {
+            let bArr = block.findFilled(contract.cId);
+            output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
+            return output;
+          } else {
+            let blockInfoArray = block.find(contract.cId);
+            output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
+            return output;
+          }
+        })
+        return response
+      })
+      .then(response => res.json(response));
   });
 
   // pharmaceutical company info
