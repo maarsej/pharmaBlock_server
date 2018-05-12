@@ -10,31 +10,31 @@ router.all('*', cors());
 module.exports = (knex) => {
 
   router.post('/login', (req, res) => {
-    knex.select('public_address', 'name', 'password').from('patients').where('email', req.body.email)
-    .then((qres) => {
-      if (qres.length === 1) {
-        if (bcrypt.compareSync(req.body.password, qres[0].password)) {
-          req.session.userId = qres[0].public_address;
-          res.status(200).json({userId: req.session.userId, userName: qres[0].name, type: 'patient'});
-        } else {
-          res.status(401);  // found patient, but password failed
-        }
-      } else {
-        knex.select('public_address', 'company_name', 'password').from('pharmacos').where('email', req.body.email)
-        .then((qres) => {
-          if (qres.length === 1) {
-            if (bcrypt.compareSync(req.body.password, qres[0].password)) {
-              req.session.userId = qres[0].public_address;
-              res.status(200).json({userId: req.session.userId, name: qres[0].company_name, type: 'pharma'});
-            } else {
-              res.status(401);  // found pharmaco, but password failed
-            }
+    knex.select('public_address', 'username', 'password').from('patients').where('email', req.body.email)
+      .then((qres) => {
+        if (qres.length === 1) {
+          if (bcrypt.compareSync(req.body.password, qres[0].password)) {
+            req.session.userId = qres[0].public_address;
+            res.status(200).json({ userId: req.session.userId, userName: qres[0].username, type: 'patient' });
           } else {
-            res.status(404);  // didn't find specified email
+            res.status(401);  // found patient, but password failed
           }
-        });
-      }
-    });
+        } else {
+          knex.select('public_address', 'company_name', 'password').from('pharmacos').where('email', req.body.email)
+            .then((qres) => {
+              if (qres.length === 1) {
+                if (bcrypt.compareSync(req.body.password, qres[0].password)) {
+                  req.session.userId = qres[0].public_address;
+                  res.status(200).json({ userId: req.session.userId, userName: qres[0].company_name, type: 'pharma' });
+                } else {
+                  res.status(401);  // found pharmaco, but password failed
+                }
+              } else {
+                res.status(404);  // didn't find specified email
+              }
+            });
+        }
+      });
   });
 
   // logout request: delete cookie
@@ -51,15 +51,17 @@ module.exports = (knex) => {
     knex('contracts')
       .join('drugs', 'drugs.id', 'contracts.drug_id')
       .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-      .select('contracts.public_address AS cId', 'pharmacos.company_name', 'drugs.brand_name')
+      .select('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.brand_name')
       .where('patient_pubaddr', req.params.public_address)
-      // .then(qres => qres.forEach((contract) => { // maybe use a map (spread object add to it from blockchain response)
-        //getInfo for every contract using block chain helpers
-        //return s
-      // }))
+      /* .then((qres) => {
+        qres.map((contract) => { // maybe use a map (spread object add to it from blockchain response)
+          getInfo for every contract using block chain helpers
+          return s
+        })
+      }) */
       .then(qres => res.json(qres));
   });
-  
+
   // create prescription, submit bids from companies with that drug id, return all contracts
   router.post('patients/:public_address/contracts', (req, res) => {
     // expecting prescription info
@@ -79,19 +81,19 @@ module.exports = (knex) => {
       .from('contracts')
       .where('contract_address', req.params.cId)
       .then(qres => res.json(qres));
-      // getInfo for contract @ cId
-      // return info
+    // getInfo for contract @ cId
+    // return info
   });
 
   // fill prescription (accept bid)
   router.post('patients/:public_address/contracts/:oldcId', (req, res) => {
-      // expecting bid info
-      // get info from old Prescription contract @ oldcID
-      // fillPrescription.new get newCID
+    // expecting bid info
+    // get info from old Prescription contract @ oldcID
+    // fillPrescription.new get newCID
 
-      //db concerns
-      // add new contract to database @ newCID AND delete contract from database @ oldcID
-      //return all contracts as a follow up request from front end
+    //db concerns
+    // add new contract to database @ newCID AND delete contract from database @ oldcID
+    //return all contracts as a follow up request from front end
   });
 
   // patient info
@@ -111,8 +113,8 @@ module.exports = (knex) => {
       .select('contracts.public_address', 'pharmacos.company_name', 'drugs.brand_name')
       .where('contracts.pharmaco_pubaddr', req.params.public_address)
       // .then(qres => qres.forEach((contract) => { // maybe use a map (spread object add to it from blockchain response)
-        //getInfo for every contract using block chain helpers
-        //return s
+      //getInfo for every contract using block chain helpers
+      //return s
       // }))
       .then(qres => res.json(qres));
   });
