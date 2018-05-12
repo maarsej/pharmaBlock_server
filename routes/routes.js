@@ -89,7 +89,7 @@ module.exports = (knex) => {
       .where('contract_address', req.params.cId)
 
       //ASSUMING THIS RETURNS AN ARRAY WITH ONE OBJECT
-      
+
       .then((qres) => {
         let response = qres.map((contract) => {
           if (contracts.end_date) {
@@ -124,7 +124,7 @@ module.exports = (knex) => {
 
   // patient info
   router.get('/patients/:public_address', (req, res) => {
-    knex.select('public_address', 'email', 'name', 'address', 'city', 'postal_code')
+    knex.select('public_address', 'email', 'username', 'address', 'city', 'postal_code')
       .from('patients')
       .where('public_address', req.params.public_address)
       .then((qres) => { console.log('qres', qres); res.json(qres) })
