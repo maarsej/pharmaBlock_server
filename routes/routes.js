@@ -146,6 +146,13 @@ module.exports = (knex) => {
       .then((qres) => res.json(qres));
   });
 
+  router.get('/pharmacos/:public_address/drugs', (req, res) => {
+    knex.select()
+      .from('drugs')
+      .where('drugs.pharmaco_pubaddr', req.params.public_address)
+      .then(qres => res.json(qres));
+  });
+
   // basic pharmaceutical company, all contracts info
   router.get('/pharmacos/:public_address/contracts', (req, res) => {
     knex('contracts')
