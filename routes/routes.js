@@ -66,6 +66,14 @@ module.exports = (knex) => {
   });
 
   // basic pharmaceutical company contract info
+  router.get('/pharmacos/:public_address/drugs', (req, res) => {
+    knex.select()
+      .from('drugs')
+      .where('drugs.pharmaco_pubaddr', req.params.public_address)
+      .then(qres => res.json(qres));
+  });
+
+  // basic pharmaceutical company contract info
   router.get('/pharmacos/:public_address/contracts', (req, res) => {
     knex('contracts')
       .join('drugs', 'drugs.id', 'contracts.drug_id')
@@ -90,7 +98,6 @@ module.exports = (knex) => {
       .where('public_address', req.params.id)
       .then(qres => res.json(qres));
   });
-
 
   return router;
 }
