@@ -41,45 +41,52 @@ setProvider = function () {
 
 
 findFilled = function (id) {
+  return new Promise((resolve, reject) => {
     setProvider();
     Prescription.setProvider(web3.currentProvider);
     const contractInstance = filledPrescription.at(id); //0xd49bDC6802Acc58931591749607ad08cb13F8e67
     contractInstance.getInfo.call().then(function (v) {
         // console.log(v);
-        return v;
+        resolve(v);
     }).catch((error) => {
-        console.log(error)
+        reject(error);
     });
+  })
 }
 
 find = function (id) {
+  return new Promise((resolve, reject) => {
     setProvider();
     Prescription.setProvider(web3.currentProvider);
     const contractInstance = Prescription.at(id); //0xd49bDC6802Acc58931591749607ad08cb13F8e67
     contractInstance.getInfo.call().then(function (v) {
         // console.log(v);
-        return v;
+        resolve(v);
     }).catch((error) => {
-        console.log(error)
+        reject(error);
     });
+  })
 }
 
 create = function (currentUser, drugID, dosage, numberOfDoses, frequencyOfDose) {
+  return new Promise((resolve, reject) => {
     setProvider(); // not sure how to handle telling it how to access webmask
     Prescription.new(drugID, dosage, numberOfDoses, frequencyOfDose, { from: currentUser, gas: 6000000 }).then(instance => {
         let checkAddress = setInterval(() => {
             if (instance.address) {
                 console.log("Contract address: " + instance.address);
                 clearInterval(checkAddress)
-                return instance.address;
+                resolve ( instance.address);
             }
         }, 100);
     }).catch((error) => {
-        console.log(error)
+      reject(error)
     });
+  })
 }
 
 sign = function (id, currentUser, costPerDose, startDate, endDate, pharmaPubAddr) {
+  return new Promise((resolve, reject) => {
     setProvider();
     const contractInstance = Prescription.at(id); //0xac68dB96A9E756a83AEC20d47DbeE90017a05bF2
     contractInstance.getInfo.call().then((output) => {
@@ -88,17 +95,18 @@ sign = function (id, currentUser, costPerDose, startDate, endDate, pharmaPubAddr
                 if (instance.address) {
                     console.log("Contract address: " + instance.address);
                     clearInterval(checkAddress)
-                    return instance.address;
+                    resolve ( instance.address);
                 }
             }, 100);
         }).catch((error) => {
             console.log(error)
         });
-    }).catch((error) => {
-        console.log(error)
+      }).catch((error) => {
+        reject(error)
+      });
     })
-}
-
+  }
+  
 pay = function (id,value) {
     setProvider();
     Prescription.setProvider(web3.currentProvider);

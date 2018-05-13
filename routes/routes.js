@@ -4,8 +4,44 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const block = require('../chainHelpers.js');
 
-
 router.all('*', cors());
+
+sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
+  Promise.all (fieldsFromDb.map((contract) => {
+    if (contract.end_date) {
+      return block.findFilled(contract.cId)
+    } else {
+      return block.find(contract.cId)
+    }
+  }))
+  .then ((blockchainResponse) => {
+    for (contractIndex = 0; contractIndex < fieldsFromDb.length; ++contractIndex) {
+      let dbInfo = fieldsFromDb[contractIndex];
+      let blockInfo = blockchainResponse[contractIndex];
+      let output = dbInfo.end_date ?
+      { // would love to use spread operator for dbInfo fields, but it seems to be incompatible with node
+        cId: dbInfo.cId,
+        end_date: dbInfo.end_date,
+        company_name: dbInfo.company_name,
+        brand_name: dbInfo.brand_name,
+        drugId: blockInfo[0],
+        dosage: blockInfo[1],
+        numberOfDoses: blockInfo[2],
+        frequencyOfDose: blockInfo[3],
+        costPerDose: blockInfo[4],
+        contractStatus: 'filled'
+      } : {
+        cId: dbInfo.cId,
+        drugId: blockInfo[0],
+        dosage: blockInfo[1],
+        numberOfDoses: blockInfo[2],
+        frequencyOfDose: blockInfo[3],
+        contractStatus: 'pending'
+      };
+      response.json(output);
+    }
+  });
+}
 
 module.exports = (knex) => {
 
@@ -56,21 +92,12 @@ module.exports = (knex) => {
     .select()
     .where('patient_pubaddr', req.params.public_address)
     .then((dbResponse) => {
-      console.log (dbResponse)
-      let dbAndBlockResponse = dbResponse.map((contract) => {
-        if (contract.end_date) {
-          let blockInfoArray = block.findFilled(contract.cId);
-          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: blockInfoArray[0], dosage: blockInfoArray[1], numberOfDoses: blockInfoArray[2], frequencyOfDose: blockInfoArray[3], costPerDose: blockInfoArray[4], type: 'filled'};
-          return output;
-        } else {
-          let blockInfoArray = block.find(contract.cId);
-          let output = {cId: contract.cId, drugId: blockInfoArray[0], dosage: blockInfoArray[1], numberOfDoses: blockInfoArray[2], frequencyOfDose: blockInfoArray[3], type: 'pending'};
-          return output;
-        }
-      })
-      return dbAndBlockResponse;
+      if (dbResponse.length > 0) {
+        sendJSONMergedWithBlockchainInfo(dbResponse, res);
+      } else {
+        res.status(404).send('Contract not found.');
+      }
     })
-    .then(response => res.json(response));
   });
 
   // create prescription, submit bids from companies with that drug id, return all contracts
