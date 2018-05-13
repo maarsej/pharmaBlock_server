@@ -93,18 +93,15 @@ module.exports = (knex) => {
     knex.select()
       .from('contracts')
       .where('contract_address', req.params.cId)
-      
-      //ASSUMING THIS RETURNS AN ARRAY WITH ONE OBJECT
-
       .then((qres) => {
         let response = qres.map((contract) => {
           if (contract.end_date) {
             let bArr = block.findFilled(contract.cId);
-            output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
+            let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
             return output;
           } else {
             let blockInfoArray = block.find(contract.cId);
-            output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
+            let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
             return output;
           }
         })
@@ -160,11 +157,11 @@ module.exports = (knex) => {
       let response = qres.map((contract) => { 
         if (contract.end_date) {
           let bArr = block.findFilled(contract.cId);
-          output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
+          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
           return output;
         } else {
           let blockInfoArray = block.find(contract.cId);
-          output = {...contract, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
+          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
           return output;
         }
       })
