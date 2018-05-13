@@ -49,23 +49,26 @@ module.exports = (knex) => {
   // return all contracts for patient [{id: cId, name: res.brand_name, company: res.company_name + blockchain info } ...]
   router.get('/patients/:public_address/contracts', (req, res) => {
   knex('contracts')
-    .join('drugs', 'drugs.id', 'contracts.drug_id')
+    .join('drugs', 'drugs.generic_id', 'contracts.drug_id')
     .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-    .select('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.brand_name')
+    // this "distinct" clause is a workaround for the fact that each drug may have multiple entries in the drugs table -- not ideal, but...
+    .distinct('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.generic_name')
+    .select()
     .where('patient_pubaddr', req.params.public_address)
-    .then((qres) => {
-      let response = qres.map((contract) => {
+    .then((dbResponse) => {
+      console.log (dbResponse)
+      let dbAndBlockResponse = dbResponse.map((contract) => {
         if (contract.end_date) {
-          let bArr = block.findFilled(contract.cId);
-          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
+          let blockInfoArray = block.findFilled(contract.cId);
+          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: blockInfoArray[0], dosage: blockInfoArray[1], numberOfDoses: blockInfoArray[2], frequencyOfDose: blockInfoArray[3], costPerDose: blockInfoArray[4], type: 'filled'};
           return output;
         } else {
           let blockInfoArray = block.find(contract.cId);
-          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
+          let output = {cId: contract.cId, drugId: blockInfoArray[0], dosage: blockInfoArray[1], numberOfDoses: blockInfoArray[2], frequencyOfDose: blockInfoArray[3], type: 'pending'};
           return output;
         }
       })
-      return response;
+      return dbAndBlockResponse;
     })
     .then(response => res.json(response));
   });
@@ -96,12 +99,12 @@ module.exports = (knex) => {
       .then((qres) => {
         let response = qres.map((contract) => {
           if (contract.end_date) {
-            let bArr = block.findFilled(contract.cId);
-            let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
+            let blockInfoArray = block.findFilled(contract.cId);
+            let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: blockInfoArray[0], dosage: blockInfoArray[1], numberOfDoses: blockInfoArray[2], frequencyOfDose: blockInfoArray[3], costPerDose: blockInfoArray[4], type: 'filled'};
             return output;
           } else {
             let blockInfoArray = block.find(contract.cId);
-            let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
+            let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: blockInfoArray[0], dosage: blockInfoArray[1], numberOfDoses: blockInfoArray[2], frequencyOfDose: blockInfoArray[3], type: 'pending'};
             return output;
           }
         })
@@ -156,19 +159,19 @@ module.exports = (knex) => {
   // basic pharmaceutical company, all contracts info
   router.get('/pharmacos/:public_address/contracts', (req, res) => {
     knex('contracts')
-    .join('drugs', 'drugs.id', 'contracts.drug_id')
+    .join('drugs', 'drugs.generic_id', 'contracts.drug_id')
     .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
     .select('contracts.public_address', 'contracts.end_date', 'pharmacos.company_name', 'drugs.brand_name')
     .where('contracts.pharmaco_pubaddr', req.params.public_address)
     .then((qres) => {
       let response = qres.map((contract) => { 
         if (contract.end_date) {
-          let bArr = block.findFilled(contract.cId);
-          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], costPerDose: bArr[4], type: 'filled'};
+          let blockInfoArray = block.findFilled(contract.cId);
+          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: blockInfoArray[0], dosage: blockInfoArray[1], numberOfDoses: blockInfoArray[2], frequencyOfDose: blockInfoArray[3], costPerDose: blockInfoArray[4], type: 'filled'};
           return output;
         } else {
           let blockInfoArray = block.find(contract.cId);
-          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: bArr[0], dosage: bArr[1], numberOfDoses: bArr[2], frequencyOfDose: bArr[3], type: 'pending'};
+          let output = {cId: contract.cId, end_date: contract.end_date, company_name: contract.company_name, brand_name: contract.brand_name, drugId: blockInfoArray[0], dosage: blockInfoArray[1], numberOfDoses: blockInfoArray[2], frequencyOfDose: blockInfoArray[3], type: 'pending'};
           return output;
         }
       })
@@ -187,7 +190,7 @@ module.exports = (knex) => {
 
   router.post('/pharmacos/bid/:cId', (req, res) => {
     knex('contracts')
-    .join('drugs', 'contracts.drug_id', 'drugs.id')
+    .join('drugs', 'contracts.drug_id', 'drugs.generic_id')
     .where('contracts.public_address', req.params.cId)
     .select(`drugs.pharmaco_pubaddr, ${req.params.cId} as contract_pubaddr`, drugs.price_per_mg)
     .then(selectResult => {
@@ -196,7 +199,7 @@ module.exports = (knex) => {
       .insert(selectResult);  
     })
     // knex('contracts')
-    // .join('drugs', 'contracts.drug_id', 'drugs.id')
+    // .join('drugs', 'contracts.drug_id', 'drugs.generic_id')
     // .where('contracts.public_address', req.params.cId)
     // .select('drugs.price_per_mg, drugs.pharmaco_pubaddr')
     // .then(selectResult => {

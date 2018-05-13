@@ -5,6 +5,7 @@ exports.up = function(knex, Promise) {
     table.string('pharmaco_pubaddr');
     table.string('brand_name');
     table.string('generic_name');
+    table.integer('generic_id');
     table.integer('price_per_mg');
     table.string('description');
     table.string('image_url');
