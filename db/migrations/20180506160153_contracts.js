@@ -6,7 +6,7 @@ exports.up = function(knex, Promise) {
     table.string('patient_pubaddr');
     table.string('pharmaco_pubaddr');
     table.integer('drug_id');
-    table.date('end_date');
+    table.integer('end_date');
   });
 };
 

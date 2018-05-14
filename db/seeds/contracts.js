@@ -10,13 +10,14 @@ exports.seed = function(knex, Promise) {
           patient_pubaddr: '0xBb16559B164e4f0B872caAA640Dc1CCbf1f3E8b2',
           pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B',
           drug_id: 1,
-          end_date: '2018-05-18'
+          end_date: null
         }),
         knex('contracts').insert({
           public_address: '0xac68dB96A9E756a83AEC20d47DbeE90017a05bF2',
           patient_pubaddr: '0xa273e1C1Bd3FBC09b5274B2a2319193cd7298873',
+          pharmaco_pubaddr: '0xa273e1C1Bd3FBC09b5274B2a2319193cd7298873',
           drug_id: 2,
-          end_date: '2018-05-19'
+          end_date: 1528816988
         })
       ]);
     });
