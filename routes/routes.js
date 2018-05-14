@@ -47,7 +47,6 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
 module.exports = (knex) => {
 
   router.post('/login', (req, res) => {
-    console.log ('LOGIN', req.body)
     knex.select('public_address', 'username', 'password').from('patients').where('email', req.body.email)
     .then((resultFromSelect) => {
       if (resultFromSelect.length === 1) {
@@ -109,7 +108,6 @@ module.exports = (knex) => {
     .then((newCId) => {
       knex('contracts').select('drug_id').where('public_address', req.params.oldCId)
       .then((drugIdResponse) => {
-        console.log ("drugIdResponse", drugIdResponse)
         knex('contracts').where('public_address', req.params.oldCId).del()
         .then(() => {
           knex('contracts').returning('id').insert({
@@ -125,7 +123,8 @@ module.exports = (knex) => {
             } else {
               res.status(500).send(`Failed to create replacement for ${req.params.oldCId}`);
             }
-        });  
+          });  
+        })
       })
     })
   });    
@@ -152,15 +151,20 @@ module.exports = (knex) => {
   router.post('/patients/:public_address/contracts', (req, res) => {
     block.create(req.params.public_address, req.body.drugId, req.body.dosage, req.body.numberOfDoses, req.body.frequencyOfDose)
     .then((contractAddress) => {
-      knex('contracts').returning('id').insert({
+      knex('contracts').returning('*').insert({
         public_address: contractAddress,
         patient_pubaddr: req.params.public_address,
         drug_id: req.body.drugId
       })  
-      .then(resultFromInsert => res.json(resultFromInsert));
+      .then(resultFromInsert => {
+        console.log ('after inserting contract', resultFromInsert);
+        if (resultFromInsert.length === 1) {
+          res.json(resultFromInsert);
+        } else {
+          res.status(500).send('Failed to create contract.');
+        }
+      });  
     });
-    // submit bids from pharmacos (helper function calls 'post bid' route below)
-    //return all contracts as a follow up request from front end
   });  
 
   // patient info
@@ -171,19 +175,12 @@ module.exports = (knex) => {
       .then((resultFromSelect) => res.json(resultFromSelect));
   });
 
-  router.get('/pharmacos/:public_address/drugs', (req, res) => {
-    knex.select()
-      .from('drugs')
-      .where('drugs.pharmaco_pubaddr', req.params.public_address)
-      .then(resultFromSelect => res.json(resultFromSelect));
-  });
-
   // basic pharmaceutical company product info
   router.get('/pharmacos/:public_address/drugs', (req, res) => {
     knex.select()
       .from('drugs')
       .where('drugs.pharmaco_pubaddr', req.params.public_address)
-      .then(qres => res.json(qres));
+      .then(resultFromSelect => res.json(resultFromSelect));
   });
 
   // basic pharmaceutical company contract info
@@ -212,8 +209,7 @@ module.exports = (knex) => {
     .then(resultFromSelect => res.json(resultFromSelect));
   });
 
-  router.post('/contracts/:cId/bid', (req, res) => {
-    // let response = [];
+  router.post('/contracts/:cId/bids', (req, res) => {
     knex('contracts')
     .join('drugs', 'contracts.drug_id', 'drugs.generic_id')
     .where('contracts.public_address', req.params.cId)
@@ -227,9 +223,11 @@ module.exports = (knex) => {
           contract_pubaddr: req.params.cId,
           price_per_mg: row.price_per_mg
         })
-        // .then(insertResult => response.push(insertResult));  
+        .catch(err => {
+          res.status(err);
+        })
       })
-      res.json(resultFromSelect);
+      res.json(resultFromSelect.length);
     })  
   });  
   
