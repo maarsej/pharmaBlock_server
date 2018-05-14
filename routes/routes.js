@@ -105,12 +105,20 @@ module.exports = (knex) => {
       .catch((err) => console.log(err));
   });
 
-  // basic pharmaceutical company, all contracts info
+  // basic pharmaceutical company product info
+  router.get('/pharmacos/:public_address/drugs', (req, res) => {
+    knex.select()
+      .from('drugs')
+      .where('drugs.pharmaco_pubaddr', req.params.public_address)
+      .then(qres => res.json(qres));
+  });
+
+  // basic pharmaceutical company contract info
   router.get('/pharmacos/:public_address/contracts', (req, res) => {
     knex('contracts')
       .join('drugs', 'drugs.id', 'contracts.drug_id')
       .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-      .select('contracts.public_address', 'pharmacos.company_name', 'drugs.brand_name')
+      .select('contracts.public_address', 'pharmacos.company_name', 'drugs.brand_name', 'drugs.description', 'drugs.price_per_mg', 'drugs.image_url', 'drugs.id as dose')
       .where('contracts.pharmaco_pubaddr', req.params.public_address)
       // .then(qres => qres.forEach((contract) => { // maybe use a map (spread object add to it from blockchain response)
       //getInfo for every contract using block chain helpers
