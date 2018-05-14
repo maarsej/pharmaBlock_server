@@ -24,7 +24,7 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
         cId: dbInfo.cId,
         end_date: dbInfo.end_date,
         company_name: dbInfo.company_name,
-        brand_name: dbInfo.brand_name,
+        generic_name: dbInfo.generic_name,
         drugId: blockInfo[0],
         dosage: blockInfo[1],
         numberOfDoses: blockInfo[2],
@@ -47,6 +47,7 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
 module.exports = (knex) => {
 
   router.post('/login', (req, res) => {
+    console.log ('LOGIN', req.body)
     knex.select('public_address', 'username', 'password').from('patients').where('email', req.body.email)
     .then((resultFromSelect) => {
       if (resultFromSelect.length === 1) {
@@ -75,13 +76,14 @@ module.exports = (knex) => {
   });    
       
   // logout request: delete cookie
-  router.get('/logout', (req, res) => {
+  router.post('/logout', (req, res) => {
     req.session = null;
+    res.status(303);
   });  
       
-  router.get('/', (req, res) => {
-    res.status(200).send('<h1>Here it is.</h1>');
-  });  
+  // router.get('/', (req, res) => {
+  //   res.status(200).send('<h1>Here it is.</h1>');
+  // });  
       
   // returns specific contract by contract id
   router.get('/patients/:public_address/contracts/:cId', (req, res) => {
@@ -103,9 +105,6 @@ module.exports = (knex) => {
 
   // fill prescription (accept bid)
   router.post('/patients/:public_address/contracts/:oldCId', (req, res) => {
-    // expecting bid info
-    // get info from old Prescription contract @ oldcID
-    // fillPrescription.new get newCID
     block.sign(req.params.oldCId, req.params.public_address, req.body.costPerDose, req.body.startDate, req.body.endDate, req.body.pharma_address)
     .then((newCId) => {
       knex('contracts').select('drug_id').where('public_address', req.params.oldCId)
@@ -113,18 +112,22 @@ module.exports = (knex) => {
         console.log ("drugIdResponse", drugIdResponse)
         knex('contracts').where('public_address', req.params.oldCId).del()
         .then(() => {
-          knex('contracts').returning('*').insert({
+          knex('contracts').returning('id').insert({
             public_address: newCId,
             patient_pubaddr: req.params.public_address,
             pharmaco_pubaddr: req.body.pharma_address,
             drug_id: drugIdResponse[0].drug_id,
             end_date: req.body.endDate
           })  
-          .then(resultFromInsert => res.json(resultFromInsert));
+          .then(resultFromInsert => {
+            if (resultFromInsert.length === 1) {
+              res.status(200).send(`SIGNED ${req.params.oldCId}`);
+            } else {
+              res.status(500).send(`Failed to create replacement for ${req.params.oldCId}`);
+            }
         });  
       })
     })
-  //return all contracts as a follow up request from front end
   });    
   
   // return all contracts for patient [{id: cId, name: res.brand_name, company: res.company_name + blockchain info } ...]
@@ -149,8 +152,7 @@ module.exports = (knex) => {
   router.post('/patients/:public_address/contracts', (req, res) => {
     block.create(req.params.public_address, req.body.drugId, req.body.dosage, req.body.numberOfDoses, req.body.frequencyOfDose)
     .then((contractAddress) => {
-      console.log ("IS IT MY BODY?", req.body);
-      knex('contracts').returning('*').insert({
+      knex('contracts').returning('id').insert({
         public_address: contractAddress,
         patient_pubaddr: req.params.public_address,
         drug_id: req.body.drugId
@@ -210,7 +212,7 @@ module.exports = (knex) => {
     .then(resultFromSelect => res.json(resultFromSelect));
   });
 
-  router.post('/pharmacos/bid/:cId', (req, res) => {
+  router.post('/contracts/:cId/bid', (req, res) => {
     // let response = [];
     knex('contracts')
     .join('drugs', 'contracts.drug_id', 'drugs.generic_id')
