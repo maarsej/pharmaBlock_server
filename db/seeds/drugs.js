@@ -17,6 +17,16 @@ exports.seed = function(knex, Promise) {
         }),
         knex('drugs').insert({
           pharmaco_pubaddr: '0x04C8559326Cd7649424708F85D45f8F924CC5b74',
+          brand_name: 'Nice Drug',
+          generic_name: 'bonadrogo',
+          generic_id: 1,
+          price_per_mg: 3,
+          description: 'A really safe and efficacious drug.',
+          image_url: 'capsule.png',
+          flag: 1
+        }),
+        knex('drugs').insert({
+          pharmaco_pubaddr: '0x04C8559326Cd7649424708F85D45f8F924CC5b74',
           brand_name: 'Bad Drug',
           generic_name: 'malbonadrogo',
           generic_id: 2,
