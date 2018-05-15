@@ -10,9 +10,9 @@ router.all('*', cors());
 sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
   Promise.all (fieldsFromDb.map((contract) => {
     if (contract.end_date) {
-      return block.findFilled(contract.cId)
+      return block.findFilled(contract.public_address)
     } else {
-      return block.find(contract.cId)
+      return block.find(contract.public_address)
     }
   }))
   .then ((blockchainResponse) => {
@@ -33,14 +33,16 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
               contractStatus: 'filled'
             }));
       } else {
-        output.push ({
-          cId: dbInfo.cId,
-          drugId: blockInfo[0],
-          dosage: blockInfo[1],
-          numberOfDoses: blockInfo[2],
-          frequencyOfDose: blockInfo[3],
-          contractStatus: 'pending'
-        });
+        output.push(
+          Object.assign(
+            dbInfo,
+            {
+              drugId: blockInfo[0],
+              dosage: blockInfo[1],
+              numberOfDoses: blockInfo[2],
+              frequencyOfDose: blockInfo[3],
+              contractStatus: 'pending'
+            }));
       }
     }
     response.json(output);
@@ -57,7 +59,7 @@ module.exports = (knex) => {
           const payload = {
             email: req.body.email
           };
-          const token = jwt.sign(payload, app.get('superSecret'), {
+          const token = jwt.sign(payload, 'secretstring', {
             expiresInMinutes: 1440 // expires in 24 hours
           });
           res.status(200).json({
