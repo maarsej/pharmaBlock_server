@@ -19,26 +19,28 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
     for (contractIndex = 0; contractIndex < fieldsFromDb.length; ++contractIndex) {
       let dbInfo = fieldsFromDb[contractIndex];
       let blockInfo = blockchainResponse[contractIndex];
-      output.push (dbInfo.end_date ?
-      { // would love to use spread operator for dbInfo fields, but it seems to be incompatible with node
-        cId: dbInfo.cId,
-        end_date: dbInfo.end_date,
-        company_name: dbInfo.company_name,
-        generic_name: dbInfo.generic_name,
-        drugId: blockInfo[0],
-        dosage: blockInfo[1],
-        numberOfDoses: blockInfo[2],
-        frequencyOfDose: blockInfo[3],
-        costPerDose: blockInfo[4],
-        contractStatus: 'filled'
-      } : {
-        cId: dbInfo.cId,
-        drugId: blockInfo[0],
-        dosage: blockInfo[1],
-        numberOfDoses: blockInfo[2],
-        frequencyOfDose: blockInfo[3],
-        contractStatus: 'pending'
-      });
+      if (dbInfo.end_date) {
+        output.push(
+          Object.assign(
+            dbInfo,
+            {
+              drugId: blockInfo[0],
+              dosage: blockInfo[1],
+              numberOfDoses: blockInfo[2],
+              frequencyOfDose: blockInfo[3],
+              costPerDose: blockInfo[4],
+              contractStatus: 'filled'
+            }));
+      } else {
+        output.push ({
+          cId: dbInfo.cId,
+          drugId: blockInfo[0],
+          dosage: blockInfo[1],
+          numberOfDoses: blockInfo[2],
+          frequencyOfDose: blockInfo[3],
+          contractStatus: 'pending'
+        });
+      }
     }
     response.json(output);
   });
@@ -47,6 +49,7 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
 module.exports = (knex) => {
 
   router.post('/login', (req, res) => {
+    console.log ('LOGIN', req.body)
     knex.select('public_address', 'username', 'password').from('patients').where('email', req.body.email)
     .then((resultFromSelect) => {
       if (resultFromSelect.length === 1) {
@@ -134,7 +137,8 @@ module.exports = (knex) => {
     knex('contracts')  
     .join('drugs', 'drugs.generic_id', 'contracts.drug_id')
     .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-    // this "distinct" clause is a workaround for the fact that each drug may have multiple entries in the drugs table -- not ideal, but...
+    // this "distinct" clause is a workaround for the fact that each drug may have multiple entries in the drugs table -- not ideal,
+    // but it beats changing the schema so late in the game
     .distinct('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.generic_name')
     .select()
     .where('patient_pubaddr', req.params.public_address)
@@ -188,10 +192,9 @@ module.exports = (knex) => {
     knex('contracts')  
     .join('drugs', 'drugs.generic_id', 'contracts.drug_id')
     .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-    // this "distinct" clause is a workaround for the fact that each drug may have multiple entries in the drugs table -- not ideal, but...
-    .distinct('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.generic_name')
-    .select()
+    .select('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.generic_name', 'drugs.description', 'drugs.image_url')
     .where('contracts.pharmaco_pubaddr', req.params.public_address)
+    .andWhere('drugs.pharmaco_pubaddr', req.params.public_address)
     .then((dbResponse) => {
       if (dbResponse.length > 0) {
         sendJSONMergedWithBlockchainInfo(dbResponse, res);
@@ -206,6 +209,18 @@ module.exports = (knex) => {
     knex.select('company_name', 'contact_name', 'email', 'address', 'city', 'postal_code')
     .from('pharmacos')
     .where('public_address', req.params.public_address)
+    .then(resultFromSelect => res.json(resultFromSelect));
+  });
+
+  // current bids
+  router.get('/contracts/:cId/bids', (req, res) => {
+    knex('contracts')
+    .join('bids', 'bids.contract_pubaddr', 'contracts.public_address')
+    .join('drugs', function () {
+      this.on('contracts.drug_id', 'drugs.generic_id').andOn('drugs.pharmaco_pubaddr', 'bids.pharmaco_pubaddr')
+    })
+    .where('bids.contract_pubaddr', req.params.cId)
+    .select('bids.pharmaco_pubaddr', 'bids.contract_pubaddr', 'bids.price_per_mg', 'drugs.image_url')
     .then(resultFromSelect => res.json(resultFromSelect));
   });
 
