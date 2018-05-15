@@ -262,6 +262,7 @@ module.exports = (knex) => {
     .join('drugs', function () {
       this.on('contracts.drug_id', 'drugs.generic_id').andOn('drugs.pharmaco_pubaddr', 'bids.pharmaco_pubaddr')
     })
+    .join('generic_drugs', 'generic_drugs.id', 'drugs.generic_id')
     .where('bids.contract_pubaddr', req.params.cId)
     .select()
     .then(resultFromSelect => res.json(resultFromSelect));
