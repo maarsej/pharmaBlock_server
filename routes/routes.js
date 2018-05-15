@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors')
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 const block = require('../chainHelpers.js');
 
 router.all('*', cors());
@@ -19,26 +20,28 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
     for (contractIndex = 0; contractIndex < fieldsFromDb.length; ++contractIndex) {
       let dbInfo = fieldsFromDb[contractIndex];
       let blockInfo = blockchainResponse[contractIndex];
-      output.push (dbInfo.end_date ?
-      { // would love to use spread operator for dbInfo fields, but it seems to be incompatible with node
-        cId: dbInfo.cId,
-        end_date: dbInfo.end_date,
-        company_name: dbInfo.company_name,
-        generic_name: dbInfo.generic_name,
-        drugId: blockInfo[0],
-        dosage: blockInfo[1],
-        numberOfDoses: blockInfo[2],
-        frequencyOfDose: blockInfo[3],
-        costPerDose: blockInfo[4],
-        contractStatus: 'filled'
-      } : {
-        cId: dbInfo.cId,
-        drugId: blockInfo[0],
-        dosage: blockInfo[1],
-        numberOfDoses: blockInfo[2],
-        frequencyOfDose: blockInfo[3],
-        contractStatus: 'pending'
-      });
+      if (dbInfo.end_date) {
+        output.push(
+          Object.assign(
+            dbInfo,
+            {
+              drugId: blockInfo[0],
+              dosage: blockInfo[1],
+              numberOfDoses: blockInfo[2],
+              frequencyOfDose: blockInfo[3],
+              costPerDose: blockInfo[4],
+              contractStatus: 'filled'
+            }));
+      } else {
+        output.push ({
+          cId: dbInfo.cId,
+          drugId: blockInfo[0],
+          dosage: blockInfo[1],
+          numberOfDoses: blockInfo[2],
+          frequencyOfDose: blockInfo[3],
+          contractStatus: 'pending'
+        });
+      }
     }
     response.json(output);
   });
@@ -47,28 +50,43 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
 module.exports = (knex) => {
 
   router.post('/login', (req, res) => {
-    console.log ('LOGIN', req.body)
     knex.select('public_address', 'username', 'password').from('patients').where('email', req.body.email)
     .then((resultFromSelect) => {
       if (resultFromSelect.length === 1) {
         if (bcrypt.compareSync(req.body.password, resultFromSelect[0].password)) {
-          req.session.userId = resultFromSelect[0].public_address;
-          res.status(200).json({ userId: req.session.userId, userName: resultFromSelect[0].username, userType: 'patient' });
+          const payload = {
+            email: req.body.email
+          };
+          const token = jwt.sign(payload, app.get('superSecret'), {
+            expiresInMinutes: 1440 // expires in 24 hours
+          });
+          res.status(200).json({
+            success: true,
+            message: 'Successful patient login.',
+            token: token,
+            userId: resultFromSelect[0].public_address,
+            userName: resultFromSelect[0].username,
+            userType: 'patient' });
         } else {
-          res.status(401);  // found patient, but password failed
+          res.status(401).json({ success: false, message: 'Invalid password.' });
         }
       } else {
         knex.select('public_address', 'company_name', 'password').from('pharmacos').where('email', req.body.email)
         .then((resultFromSelect) => {
           if (resultFromSelect.length === 1) {
             if (bcrypt.compareSync(req.body.password, resultFromSelect[0].password)) {
-              req.session.userId = resultFromSelect[0].public_address;
-              res.status(200).json({ userId: req.session.userId, userName: resultFromSelect[0].company_name, userType: 'pharma' });
+              res.status(200).json({
+                success: true,
+                message: 'Successful patient login.',
+                token: token,
+                userId: resultFromSelect[0].public_address,
+                userName: resultFromSelect[0].username,
+                userType: 'pharma' });
             } else {
-              res.status(401);  // found pharmaco, but password failed
+              res.status(401).json({ success: false, message: 'Invalid password.' });
             }
           } else {
-            res.status(404);  // didn't find specified email
+            res.status(404).json({ success: false, message: `${req.body.email} not found.` });
           }  
         });  
       }    
@@ -81,6 +99,7 @@ module.exports = (knex) => {
     res.status(303);
   });  
       
+
   // router.get('/', (req, res) => {
   //   res.status(200).send('<h1>Here it is.</h1>');
   // });  
