@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors')
 const router = express.Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
 const block = require('../chainHelpers.js');
 
 router.all('*', cors());
@@ -49,28 +50,43 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
 module.exports = (knex) => {
 
   router.post('/login', (req, res) => {
-    console.log ('LOGIN', req.body)
     knex.select('public_address', 'username', 'password').from('patients').where('email', req.body.email)
     .then((resultFromSelect) => {
       if (resultFromSelect.length === 1) {
         if (bcrypt.compareSync(req.body.password, resultFromSelect[0].password)) {
-          req.session.userId = resultFromSelect[0].public_address;
-          res.status(200).json({ userId: req.session.userId, userName: resultFromSelect[0].username, userType: 'patient' });
+          const payload = {
+            email: req.body.email
+          };
+          const token = jwt.sign(payload, app.get('superSecret'), {
+            expiresInMinutes: 1440 // expires in 24 hours
+          });
+          res.status(200).json({
+            success: true,
+            message: 'Successful patient login.',
+            token: token,
+            userId: resultFromSelect[0].public_address,
+            userName: resultFromSelect[0].username,
+            userType: 'patient' });
         } else {
-          res.status(401);  // found patient, but password failed
+          res.status(401).json({ success: false, message: 'Invalid password.' });
         }
       } else {
         knex.select('public_address', 'company_name', 'password').from('pharmacos').where('email', req.body.email)
         .then((resultFromSelect) => {
           if (resultFromSelect.length === 1) {
             if (bcrypt.compareSync(req.body.password, resultFromSelect[0].password)) {
-              req.session.userId = resultFromSelect[0].public_address;
-              res.status(200).json({ userId: req.session.userId, userName: resultFromSelect[0].company_name, userType: 'pharma' });
+              res.status(200).json({
+                success: true,
+                message: 'Successful patient login.',
+                token: token,
+                userId: resultFromSelect[0].public_address,
+                userName: resultFromSelect[0].username,
+                userType: 'pharma' });
             } else {
-              res.status(401);  // found pharmaco, but password failed
+              res.status(401).json({ success: false, message: 'Invalid password.' });
             }
           } else {
-            res.status(404);  // didn't find specified email
+            res.status(404).json({ success: false, message: `${req.body.email} not found.` });
           }  
         });  
       }    
@@ -90,10 +106,8 @@ module.exports = (knex) => {
   // returns specific contract by contract id
   router.get('/patients/:public_address/contracts/:cId', (req, res) => {
     knex('contracts')  
-    .join('drugs', 'drugs.generic_id', 'contracts.drug_id')
-    .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-    // this "distinct" clause is a workaround for the fact that each drug may have multiple entries in the drugs table -- not ideal, but...
-    .distinct('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.generic_name')
+    .join('generic_drugs', 'generic_drugs.id', 'contracts.drug_id')
+    .leftJoin('pharmacos', 'pharmacos.public_address', 'contracts.pharmaco_pubaddr')
     .select()
     .where('contracts.public_address', req.params.cId)
     .then((dbResponse) => {
@@ -135,11 +149,8 @@ module.exports = (knex) => {
   // return all contracts for patient [{id: cId, name: res.brand_name, company: res.company_name + blockchain info } ...]
   router.get('/patients/:public_address/contracts', (req, res) => {
     knex('contracts')  
-    .join('drugs', 'drugs.generic_id', 'contracts.drug_id')
+    .join('generic_drugs', 'generic_drugs.id', 'contracts.drug_id')
     .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-    // this "distinct" clause is a workaround for the fact that each drug may have multiple entries in the drugs table -- not ideal,
-    // but it beats changing the schema so late in the game
-    .distinct('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.generic_name')
     .select()
     .where('patient_pubaddr', req.params.public_address)
     .then((dbResponse) => {
@@ -180,9 +191,19 @@ module.exports = (knex) => {
   });
 
   // basic pharmaceutical company product info
+  router.get('/pharmacos/:public_address/drugs/:id', (req, res) => {
+    knex('drugs')
+      .join('generic_drugs', 'generic_drugs.id', 'drugs.generic_id')
+      .where('drugs.pharmaco_pubaddr', req.params.public_address)
+      .andWhere('drugs.id', req.params.id)
+      .select('drugs.*', 'generic_drugs.name', 'generic_drugs.description')
+      .then(resultFromSelect => res.json(resultFromSelect));
+  });
+
+  // basic pharmaceutical company product info
   router.get('/pharmacos/:public_address/drugs', (req, res) => {
-    knex.select()
-      .from('drugs')
+    knex('drugs')
+      .join('generic_drugs', 'generic_drugs.id', 'drugs.generic_id')
       .where('drugs.pharmaco_pubaddr', req.params.public_address)
       .then(resultFromSelect => res.json(resultFromSelect));
   });
@@ -191,7 +212,8 @@ module.exports = (knex) => {
   router.get('/pharmacos/:public_address/contracts', (req, res) => {
     knex('contracts')  
     .join('drugs', 'drugs.generic_id', 'contracts.drug_id')
-    .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
+    .join('generic_drugs', 'generic_drugs.id', 'contracts.drug_id')
+    .join('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
     .select('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.generic_name', 'drugs.description', 'drugs.image_url')
     .where('contracts.pharmaco_pubaddr', req.params.public_address)
     .andWhere('drugs.pharmaco_pubaddr', req.params.public_address)
@@ -220,7 +242,7 @@ module.exports = (knex) => {
       this.on('contracts.drug_id', 'drugs.generic_id').andOn('drugs.pharmaco_pubaddr', 'bids.pharmaco_pubaddr')
     })
     .where('bids.contract_pubaddr', req.params.cId)
-    .select('bids.pharmaco_pubaddr', 'bids.contract_pubaddr', 'bids.price_per_mg', 'drugs.image_url')
+    .select()
     .then(resultFromSelect => res.json(resultFromSelect));
   });
 
