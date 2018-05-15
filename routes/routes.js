@@ -8,11 +8,12 @@ const block = require('../chainHelpers.js');
 router.all('*', cors());
 
 sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
+  console.log('fields', fieldsFromDb)
   Promise.all (fieldsFromDb.map((contract) => {
     if (contract.end_date) {
-      return block.findFilled(contract.public_address)
+      return block.findFilled(contract.cId)
     } else {
-      return block.find(contract.public_address)
+      return block.find(contract.cId)
     }
   }))
   .then ((blockchainResponse) => {
@@ -25,11 +26,11 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
           Object.assign(
             dbInfo,
             {
-              drugId: blockInfo[0],
-              dosage: blockInfo[1],
-              numberOfDoses: blockInfo[2],
-              frequencyOfDose: blockInfo[3],
-              costPerDose: blockInfo[4],
+              drugId: parseInt(blockInfo[0]),
+              dosage: parseInt(blockInfo[1]),
+              numberOfDoses: parseInt(blockInfo[2]),
+              frequencyOfDose: parseInt(blockInfo[3]),
+              costPerDose: parseInt(blockInfo[4]),
               contractStatus: 'filled'
             }));
       } else {
@@ -37,10 +38,10 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
           Object.assign(
             dbInfo,
             {
-              drugId: blockInfo[0],
-              dosage: blockInfo[1],
-              numberOfDoses: blockInfo[2],
-              frequencyOfDose: blockInfo[3],
+              drugId: parseInt(blockInfo[0]),
+              dosage: parseInt(blockInfo[1]),
+              numberOfDoses: parseInt(blockInfo[2]),
+              frequencyOfDose: parseInt(blockInfo[3]),
               contractStatus: 'pending'
             }));
       }
@@ -110,7 +111,7 @@ module.exports = (knex) => {
     knex('contracts')  
     .join('generic_drugs', 'generic_drugs.id', 'contracts.drug_id')
     .leftJoin('pharmacos', 'pharmacos.public_address', 'contracts.pharmaco_pubaddr')
-    .select()
+    .select('contracts.public_address as cId', '*')
     .where('contracts.public_address', req.params.cId)
     .then((dbResponse) => {
       if (dbResponse.length > 0) {
@@ -153,13 +154,13 @@ module.exports = (knex) => {
     knex('contracts')  
     .join('generic_drugs', 'generic_drugs.id', 'contracts.drug_id')
     .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-    .select()
+    .select('contracts.public_address as cId', '*')
     .where('patient_pubaddr', req.params.public_address)
     .then((dbResponse) => {
       if (dbResponse.length > 0) {
         sendJSONMergedWithBlockchainInfo(dbResponse, res);
       } else {
-        res.status(404).send('Contract not found.');
+        res.status(200).send('No contracts.');
       }  
     })  
   });  
@@ -186,7 +187,7 @@ module.exports = (knex) => {
 
   // patient info
   router.get('/patients/:public_address', (req, res) => {
-    knex.select('public_address', 'email', 'username', 'address', 'city', 'postal_code')
+    knex.select()
       .from('patients')
       .where('public_address', req.params.public_address)
       .then((resultFromSelect) => res.json(resultFromSelect));
@@ -198,7 +199,6 @@ module.exports = (knex) => {
       .join('generic_drugs', 'generic_drugs.id', 'drugs.generic_id')
       .where('drugs.pharmaco_pubaddr', req.params.public_address)
       .andWhere('drugs.id', req.params.id)
-      .select('drugs.*', 'generic_drugs.name', 'generic_drugs.description')
       .then(resultFromSelect => res.json(resultFromSelect));
   });
 
@@ -211,26 +211,45 @@ module.exports = (knex) => {
   });
 
   // basic pharmaceutical company contract info
+  router.get('/pharmacos/:public_address/contracts/:cId', (req, res) => {
+    knex('contracts')  
+    .join('drugs', 'drugs.generic_id', 'contracts.drug_id')
+    .join('generic_drugs', 'generic_drugs.id', 'contracts.drug_id')
+    .join('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
+    .select('contracts.public_address AS cId', '*')
+    .where('contracts.pharmaco_pubaddr', req.params.public_address)
+    .andWhere('drugs.pharmaco_pubaddr', req.params.public_address)
+    .andWhere('contracts.public_address', req.params.cId)
+    .then((dbResponse) => {
+      if (dbResponse.length > 0) {
+        sendJSONMergedWithBlockchainInfo(dbResponse, res);
+      } else {
+        res.status(200).send('No contracts.');
+      }  
+    })  
+  });
+  
+  // basic pharmaceutical company contract info
   router.get('/pharmacos/:public_address/contracts', (req, res) => {
     knex('contracts')  
     .join('drugs', 'drugs.generic_id', 'contracts.drug_id')
     .join('generic_drugs', 'generic_drugs.id', 'contracts.drug_id')
     .join('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-    .select('contracts.public_address AS cId', 'contracts.end_date', 'pharmacos.company_name', 'drugs.generic_name', 'drugs.description', 'drugs.image_url')
+    .select('contracts.public_address AS cId', '*')
     .where('contracts.pharmaco_pubaddr', req.params.public_address)
     .andWhere('drugs.pharmaco_pubaddr', req.params.public_address)
     .then((dbResponse) => {
       if (dbResponse.length > 0) {
         sendJSONMergedWithBlockchainInfo(dbResponse, res);
       } else {
-        res.status(404).send('Contract not found.');
+        res.status(200).send('No contracts.');
       }  
     })  
   });
   
-  // pharmaceutical company info
+   // pharmaceutical company info
   router.get('/pharmacos/:public_address', (req, res) => {
-    knex.select('company_name', 'contact_name', 'email', 'address', 'city', 'postal_code')
+    knex.select()
     .from('pharmacos')
     .where('public_address', req.params.public_address)
     .then(resultFromSelect => res.json(resultFromSelect));

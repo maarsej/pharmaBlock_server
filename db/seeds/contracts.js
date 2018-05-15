@@ -8,7 +8,6 @@ exports.seed = function(knex, Promise) {
         knex('contracts').insert({
           public_address: '0xd49bDC6802Acc58931591749607ad08cb13F8e67',
           patient_pubaddr: '0xBb16559B164e4f0B872caAA640Dc1CCbf1f3E8b2',
-          pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B',
           drug_id: 1,
           end_date: null
         }),
