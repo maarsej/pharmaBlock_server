@@ -3,30 +3,44 @@ const bcrypt = require('bcrypt');
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
   return knex('pharmacos').del()
-    .then(function () {
-      return Promise.all([
-        // Inserts seed entries
-        knex('pharmacos').insert({
-          public_address: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B',
-          company_name: 'We Make Drugs',
-          contact_name: 'Harvey Pharmster',
-          email: 'hpharmster@gmail.com',
-          password: bcrypt.hashSync('drugs666', 10)
-        }),
-        knex('pharmacos').insert({
-          public_address: '0x04C8559326Cd7649424708F85D45f8F924CC5b74',
-          company_name: 'We Also Make Drugs',
-          contact_name: 'Pharmy Harmster',
-          email: 'phharmster@gmail.com',
-          password: bcrypt.hashSync('drugs6669', 10)
-        }),
-        knex('pharmacos').insert({
-          public_address: '0xD00c9661221a448c3D6B97b968363be5A330d722',
-          company_name: 'We Sometimes Make Drugs',
-          contact_name: 'Bill Gurd',
-          email: 'bgurd@gmail.com',
-          password: bcrypt.hashSync('drugs6660', 10)
-        }),
-       ]);
-    });
+  .then(function () {
+    return Promise.all([
+      // Inserts seed entries
+      knex('pharmacos').insert({
+        public_address: 'pharm1',
+        company_name: 'GRIFOLS USA, LLC',
+        contact_name: "Veradis Pinnijar",
+        email: '4560@gmail.com',
+        password: bcrypt.hashSync('drugs6660', 10)
+      }),
+      knex('pharmacos').insert({
+        public_address: 'pharm2',
+        company_name: 'Physicians Total Care, Inc.',
+        contact_name: "Dore Antonov",
+        email: '4561@gmail.com',
+        password: bcrypt.hashSync('drugs6661', 10)
+      }),
+      knex('pharmacos').insert({
+        public_address: 'pharm3',
+        company_name: 'AvPAK',
+        contact_name: "Giuditta Rottger",
+        email: '4562@gmail.com',
+        password: bcrypt.hashSync('drugs6662', 10)
+      }),
+      knex('pharmacos').insert({
+        public_address: 'pharm4',
+        company_name: 'Proficient Rx',
+        contact_name: "Giuditta Rottger",
+        email: '4563@gmail.com',
+        password: bcrypt.hashSync('drugs6663', 10)
+      }),
+      knex('pharmacos').insert({
+        public_address: 'pharm5',
+        company_name: 'Best Choice (Valu Merchandisers Company)',
+        contact_name: "Giuditta Rottger",
+        email: '4564@gmail.com',
+        password: bcrypt.hashSync('drugs6664', 10)
+      })
+      ]);
+  });
 };

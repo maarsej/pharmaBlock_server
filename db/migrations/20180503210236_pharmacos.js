@@ -5,9 +5,6 @@ exports.up = function(knex, Promise) {
     table.string('company_name');
     table.string('contact_name');
     table.string('email');
-    table.string('address');
-    table.string('city');
-    table.string('postal_code');
     table.string('password');
   })
 };

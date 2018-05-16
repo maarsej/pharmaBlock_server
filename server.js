@@ -41,6 +41,14 @@ app.use(express.static("public"));
 // Mount all resource routes
 app.use("/", routes(knex));
 
+// development database sanity check
+knex.schema.hasTable('generic_drugs').then(exists => {
+  if (!exists) {
+    console.log("ERROR: MUST ROLL BACK AND RUN NEW DATABASE MIGRATIONS")
+    process.exit(); 
+  }
+});
+
 app.listen(PORT, () => {
   console.log("Example app listening on port " + PORT);
 });
