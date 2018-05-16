@@ -7,8 +7,6 @@ const filledprescription_artifacts = require('./build/contracts/filledPrescripti
 
 const EROFS = require('constants').EROFS
 
-
-let provider = null
 // import { default as Web3 } from 'web3';
 // import { default as contract } from 'truffle-contract'
 
@@ -72,7 +70,7 @@ find = function (id) {
 create = function (currentUser, drugID, dosage, numberOfDoses, frequencyOfDose) {
     return new Promise((resolve, reject) => {
         setProvider();
-        Prescription.new(drugID, dosage, numberOfDoses, frequencyOfDose, { from: currentUser, gas: 6000000, value: 1 }).then(instance => {
+        Prescription.new(drugID, dosage, numberOfDoses, frequencyOfDose, { from: currentUser, gas: 6000000}).then(instance => {
             let checkAddress = setInterval(() => {
                 if (instance.address) {
                     console.log("Contract address: " + instance.address);

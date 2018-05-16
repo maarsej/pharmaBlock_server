@@ -9,7 +9,7 @@ router.all('*', cors());
 
 
 sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
-  console.log('fields', fieldsFromDb)
+  // console.log('fields', fieldsFromDb)
   Promise.all (fieldsFromDb.map((contract) => {
     if (contract.end_date) {
       return block.findFilled(contract.cId)
@@ -183,7 +183,7 @@ module.exports = (knex) => {
           res.status(500).send('Failed to create contract.');
         }
       });  
-    });
+    }).catch((e) => console.log("Error: ", e))
   });  
 
   // patient info
