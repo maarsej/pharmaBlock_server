@@ -18,7 +18,6 @@ module.exports = function(deployer, network, accounts) {
   //patient 2
   deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*15)), (today + (oneDay*15)), accounts[5], {from: accounts[1], gas: 1000000}),
   deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*45)), (today - (oneDay*15)), accounts[5], {from: accounts[1], gas: 1000000}),
-  deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*32)), (today + (oneDay*15)), accounts[5], {from: accounts[1], gas: 1000000}),
   deployer.deploy(filledPrescription, 2, 50, 60, 2, 5, (today - (oneDay*10)), (today - (oneDay*20)), accounts[6], {from: accounts[1], gas: 1000000}),
   deployer.deploy(filledPrescription, 3, 100, 30, 1, 3, (today - (oneDay*18)), (today - (oneDay*12)), accounts[7], {from: accounts[1], gas: 1000000}),
   deployer.deploy(filledPrescription, 4, 100, 30, 1, 3, (today - (oneDay*16)), (today - (oneDay*14)), accounts[7], {from: accounts[1], gas: 1000000}),

@@ -22,15 +22,15 @@ const filledPrescription = contract(filledprescription_artifacts);
 
 let values = { "drugID": "field-1", "dosage": "field-2", "numberOfDoses": "field-3", "frequencyOfDose": "field-4" }
 
-setProvider = function () {
+setProvider = function (web3Object) {
     if (typeof web3 !== 'undefined' /*'&& false' used to escape metamask being installed in my browser */) {
         // console.warn("Using web3 detected from external source like Metamask")
 
         // Use MetaMask's provider
         // window.web3 = new Web3(web3.currentProvider);
         web3 = new Web3(web3.currentProvider);
-    } else if (provider) {
-        web3 = new Web3(provider.currentProvider);
+    } else if (web3Object) {
+        web3 = new Web3(web3Object.currentProvider);
     } else {
         // console.warn("No web3 detected. Falling back to http://localhost:8545. You should remove this fallback when you deploy live, as it's inherently insecure. Consider switching to Metamask for development. More info here: http://truffleframework.com/tutorials/truffle-and-metamask");
 
@@ -47,7 +47,6 @@ setProvider = function () {
 
 findFilled = function (id) {
     return new Promise((resolve, reject) => {
-        setProvider();
         Prescription.setProvider(web3.currentProvider);
         const contractInstance = filledPrescription.at(id); //0xd49bDC6802Acc58931591749607ad08cb13F8e67
         contractInstance.getInfo.call().then(function (v) {
@@ -61,7 +60,6 @@ findFilled = function (id) {
 
 find = function (id) {
     return new Promise((resolve, reject) => {
-        setProvider();
         Prescription.setProvider(web3.currentProvider);
         const contractInstance = Prescription.at(id); //0xd49bDC6802Acc58931591749607ad08cb13F8e67
         contractInstance.getInfo.call().then(function (v) {
@@ -75,8 +73,8 @@ find = function (id) {
 
 create = function (currentUser, drugID, dosage, numberOfDoses, frequencyOfDose) {
     return new Promise((resolve, reject) => {
-        setProvider(); // not sure how to handle telling it how to access webmask
-        Prescription.new(drugID, dosage, numberOfDoses, frequencyOfDose, { from: currentUser, gas: 6000000 }).then(instance => {
+
+        Prescription.new(drugID, dosage, numberOfDoses, frequencyOfDose, { from: currentUser, gas: 6000000, value: 1 }).then(instance => {
             let checkAddress = setInterval(() => {
                 if (instance.address) {
                     console.log("Contract address: " + instance.address);
@@ -92,7 +90,6 @@ create = function (currentUser, drugID, dosage, numberOfDoses, frequencyOfDose) 
 
 sign = function (id, currentUser, costPerDose, startDate, endDate, pharmaPubAddr) {
     return new Promise((resolve, reject) => {
-        setProvider();
         const contractInstance = Prescription.at(id); //0xac68dB96A9E756a83AEC20d47DbeE90017a05bF2
         contractInstance.getInfo.call().then((output) => {
             filledPrescription.new(output[0], output[1], output[2], output[3], costPerDose, startDate, endDate, pharmaPubAddr, { from: currentUser, gas: 6000000 }).then(instance => {
@@ -112,17 +109,12 @@ sign = function (id, currentUser, costPerDose, startDate, endDate, pharmaPubAddr
     })
 }
 
-getProvider = function (web3Object) {
-    provider= web3Object;
-    console.log("PROVIDER: ", provider)
-}
-
 const blockFunc = {
     create: create,
     find: find,
     sign: sign,
     findFilled: findFilled,
-    getProvider: getProvider,
+    setProvider: setProvider,
 
 }
 
