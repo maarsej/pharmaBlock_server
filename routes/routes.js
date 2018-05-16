@@ -62,9 +62,7 @@ module.exports = (knex) => {
           const payload = {
             email: req.body.email
           };
-          const token = jwt.sign(payload, 'secretstring', {
-            expiresInMinutes: 1440 // expires in 24 hours
-          });
+          const token = jwt.sign(payload, 'secretstring');
           res.status(200).json({
             success: true,
             message: 'Successful patient login.',
