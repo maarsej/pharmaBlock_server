@@ -4,9 +4,6 @@ exports.up = function(knex, Promise) {
     table.string('public_address').primary();
     table.string('email');
     table.string('username');
-    table.string('address');
-    table.string('city');
-    table.string('postal_code');
     table.string('password');
   })
 };

@@ -7,18 +7,33 @@ exports.seed = function(knex, Promise) {
         // Inserts seed entries
         knex('generic_drugs').insert({
           id: 1,
-          name: 'bonadrogo',
-          description: 'A really safe and efficacious drug.'
+          name: 'Adalimumab',
+          description: 'For autoimmune diseases and moderate to severe active rheumatoid arthritis.'
         }),
         knex('generic_drugs').insert({
           id: 2,
-          name: 'malbonadrogo',
-          description: 'A really dangerous and useless drug.'
+          name: 'Aflibercept',
+          description: 'For use in retinal indications.'
         }),
         knex('generic_drugs').insert({
           id: 3,
-          name: 'bongustadrogo',
-          description: 'A drug you love to take.'
+          name: 'Lenalidomide',
+          description: 'For treatment of multiple myloma.'
+        }),
+        knex('generic_drugs').insert({
+          id: 4,
+          name: 'Rituximab',
+          description: 'For cancer treatment.'
+        }),
+        knex('generic_drugs').insert({
+          id: 5,
+          name: 'Etanercept',
+          description: 'For autoimmune diseases including rheumatoid arthritis, psoriasis and other inflammatory conditions.'
+        }),
+        knex('generic_drugs').insert({
+          id: 6,
+          name: 'Trastuzumab',
+          description: 'For treatment of breast and gastric cancer.'
         })
        ]);
     });
