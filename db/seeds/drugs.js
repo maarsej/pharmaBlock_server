@@ -9,7 +9,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xBC56119401f146F5eb3852C2618207349b321062",
         brand_name: 'Dactinidine',
         price_per_mg: 2,
-        image_url: 'docs/drugs/rusticpill.jpg',
+        image_url: 'rusticpill.jpg',
         generic_id: 6
       }),
       knex('drugs').insert({
@@ -17,14 +17,14 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xDB27926A76E7f64a25fD3dEF304E5141de09Fe1f",
         brand_name: 'Lexibicin',
         price_per_mg: 1,
-        image_url: 'docs/drugs/bluetablet.jpg',
+        image_url: 'bluetablet.jpg',
         generic_id: 2
       }),
       knex('drugs').insert({
         id: 3,
         pharmaco_pubaddr: "0xD00c9661221a448c3D6B97b968363be5A330d722",
         brand_name: 'Diproletra',
-        image_url: 'docs/drugs/colorpill.jpg',
+        image_url: 'colorpill.jpg',
         generic_id: 3
       }),
       knex('drugs').insert({
@@ -33,7 +33,7 @@ exports.seed = function(knex, Promise) {
         brand_name: 'Fosinostryl',
         price_per_mg: 1,
         price_per_mg: 3,
-        image_url: 'docs/drugs/glitterpill.jpg',
+        image_url: 'glitterpill.jpg',
         generic_id: 6
       }),
       knex('drugs').insert({
@@ -41,7 +41,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xD00c9661221a448c3D6B97b968363be5A330d722",
         brand_name: 'Dactinidine',
         price_per_mg: 2,
-        image_url: 'docs/drugs/gumimaci.jpg',
+        image_url: 'gumimaci.jpg',
         generic_id: 6
       }),
       knex('drugs').insert({
@@ -49,7 +49,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0x04C8559326Cd7649424708F85D45f8F924CC5b74",
         brand_name: 'Diproplex',
         price_per_mg: 2,
-        image_url: 'docs/drugs/happypill.jpg',
+        image_url: 'happypill.jpg',
         generic_id: 3
       }),
       knex('drugs').insert({
@@ -57,7 +57,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xDB27926A76E7f64a25fD3dEF304E5141de09Fe1f",
         brand_name: 'Oxanbital',
         price_per_mg: 4,
-        image_url: 'docs/drugs/lightpill.jpg',
+        image_url: 'lightpill.jpg',
         generic_id: 1
       }),
       knex('drugs').insert({
@@ -65,7 +65,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xDB27926A76E7f64a25fD3dEF304E5141de09Fe1f",
         brand_name: 'Alitredizem Isoprotin',
         price_per_mg: 4,
-        image_url: 'docs/drugs/moodpill.jpg',
+        image_url: 'moodpill.jpg',
         generic_id: 3
       }),
       knex('drugs').insert({
@@ -73,7 +73,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xBC56119401f146F5eb3852C2618207349b321062",
         brand_name: 'Amberuvax Infurolac',
         price_per_mg: 3,
-        image_url: 'docs/drugs/pill11.jpg',
+        image_url: 'pill11.jpg',
         generic_id: 2
       }),
       knex('drugs').insert({
@@ -81,7 +81,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xD00c9661221a448c3D6B97b968363be5A330d722",
         brand_name: 'Atraxane Kinorabine',
         price_per_mg: 4,
-        image_url: 'docs/drugs/pill12.jpg',
+        image_url: 'pill12.jpg',
         generic_id: 4
       }),
       knex('drugs').insert({
@@ -89,7 +89,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B",
         brand_name: 'Clarirolac Adriagine',
         price_per_mg: 1,
-        image_url: 'docs/drugs/pill13.jpg',
+        image_url: 'pill13.jpg',
         generic_id: 1
       }),
       knex('drugs').insert({
@@ -97,7 +97,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xBC56119401f146F5eb3852C2618207349b321062",
         brand_name: 'Romalamin',
         price_per_mg: 4,
-        image_url: 'docs/drugs/pill3.jpg',
+        image_url: 'pill3.jpg',
         generic_id: 3
       }),
       knex('drugs').insert({
@@ -105,7 +105,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B",
         brand_name: 'Ocuclude',
         price_per_mg: 1,
-        image_url: 'docs/drugs/pill5.jpg',
+        image_url: 'pill5.jpg',
         generic_id: 2
       }),
       knex('drugs').insert({
@@ -113,7 +113,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xD00c9661221a448c3D6B97b968363be5A330d722",
         brand_name: 'Thalimunex',
         price_per_mg: 4,
-        image_url: 'docs/drugs/pill4.jpg',
+        image_url: 'pill4.jpg',
         generic_id: 5
       }),
       knex('drugs').insert({
@@ -121,7 +121,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0x04C8559326Cd7649424708F85D45f8F924CC5b74",
         brand_name: 'Asparenol',
         price_per_mg: 4,
-        image_url: 'docs/drugs/pill6.jpg',
+        image_url: 'pill6.jpg',
         generic_id: 2
       }),
       knex('drugs').insert({
@@ -129,7 +129,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xDB27926A76E7f64a25fD3dEF304E5141de09Fe1f",
         brand_name: 'Megaretin',
         price_per_mg: 4,
-        image_url: 'docs/drugs/pill7.jpg',
+        image_url: 'pill7.jpg',
         generic_id: 4
       }),
       knex('drugs').insert({
@@ -137,7 +137,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xBC56119401f146F5eb3852C2618207349b321062",
         brand_name: 'Ramicerol',
         price_per_mg: 2,
-        image_url: 'docs/drugs/pill8.jpg',
+        image_url: 'pill8.jpg',
         generic_id: 4
       }),
       knex('drugs').insert({
@@ -145,7 +145,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0x04C8559326Cd7649424708F85D45f8F924CC5b74",
         brand_name: 'Aldurabide Alinized',
         price_per_mg: 3,
-        image_url: 'docs/drugs/pill9.jpg',
+        image_url: 'pill9.jpg',
         generic_id: 4
       }),
       knex('drugs').insert({
@@ -153,7 +153,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0x04C8559326Cd7649424708F85D45f8F924CC5b74",
         brand_name: 'Brimonoin Pronex',
         price_per_mg: 4,
-        image_url: 'docs/drugs/pinktablet.jpg',
+        image_url: 'pinktablet.jpg',
         generic_id: 1
       }),
       knex('drugs').insert({
@@ -161,7 +161,7 @@ exports.seed = function(knex, Promise) {
         pharmaco_pubaddr: "0xD00c9661221a448c3D6B97b968363be5A330d722",
         brand_name: 'Imicotrol Fenonavir',
         price_per_mg: 3,
-        image_url: 'docs/drugs/redtablet.jpg',
+        image_url: 'redtablet.jpg',
         generic_id: 2
       })
     ]);
