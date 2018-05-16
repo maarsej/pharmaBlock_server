@@ -9,7 +9,6 @@ router.all('*', cors());
 
 
 sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
-  // console.log('fields', fieldsFromDb)
   Promise.all (fieldsFromDb.map((contract) => {
     if (contract.end_date) {
       return block.findFilled(contract.cId)
@@ -54,7 +53,6 @@ sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
 module.exports = (knex) => {
 
   router.post('/login', (req, res) => {
-    console.log ('LOGIN', req.body)
     knex.select('public_address', 'username', 'password').from('patients').where('email', req.body.email)
     .then((resultFromSelect) => {
       if (resultFromSelect.length === 1) {
@@ -176,7 +174,6 @@ module.exports = (knex) => {
         drug_id: req.body.drugId
       })  
       .then(resultFromInsert => {
-        console.log ('after inserting contract', resultFromInsert);
         if (resultFromInsert.length === 1) {
           res.json(resultFromInsert);
         } else {
