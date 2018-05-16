@@ -7,6 +7,7 @@ const block = require('../chainHelpers.js');
 
 router.all('*', cors());
 
+
 sendJSONMergedWithBlockchainInfo = (fieldsFromDb, response) => {
   console.log('fields', fieldsFromDb)
   Promise.all (fieldsFromDb.map((contract) => {
@@ -99,12 +100,13 @@ module.exports = (knex) => {
       
   // logout request: delete cookie
   router.post('/logout', (req, res) => {
+    provider = {};
     req.session = null;
     res.status(303);
   });  
       
   // router.get('/', (req, res) => {
-  //   res.status(200).send('<h1>Here it is.</h1>');
+  //   res.status(200).('<h1>Here it is.</h1><script src="./routes/routes.js"></script>');
   // });  
       
   // returns specific contract by contract id
