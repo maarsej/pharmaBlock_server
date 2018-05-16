@@ -1,8 +1,8 @@
 const Prescription = artifacts.require("./Prescription.sol");
 const filledPrescription = artifacts.require("./filledPrescription.sol");
 
-today = 1526430433; //may 15th 
-oneDay = 86400; 
+const today = 1526430433; //may 15th 
+const oneDay = 86400; 
 
 
 //(Prescription, drugid, dosage, numD, freq, {from: accounts[x], gas: 1000000})
@@ -18,10 +18,10 @@ module.exports = function(deployer, network, accounts) {
   //patient 2
   deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*15)), (today + (oneDay*15)), accounts[5], {from: accounts[1], gas: 1000000}),
   deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*45)), (today - (oneDay*15)), accounts[5], {from: accounts[1], gas: 1000000}),
-  deployer.deploy(filledPrescription, 2, 50, 60, 2, 5, (today - (oneDay*10)), (today - (oneDay*20)), accounts[6], {from: accounts[1], gas: 1000000}),
-  deployer.deploy(filledPrescription, 3, 100, 30, 1, 3, (today - (oneDay*18)), (today - (oneDay*12)), accounts[7], {from: accounts[1], gas: 1000000}),
-  deployer.deploy(filledPrescription, 4, 100, 30, 1, 3, (today - (oneDay*16)), (today - (oneDay*14)), accounts[7], {from: accounts[1], gas: 1000000}),
-  deployer.deploy(filledPrescription, 5, 10, 120, 4, 1, (today - (oneDay*4)), (today - (oneDay*26)), accounts[7], {from: accounts[1], gas: 1000000}),
+  deployer.deploy(filledPrescription, 2, 50, 60, 2, 5, (today - (oneDay*10)), (today + (oneDay*20)), accounts[6], {from: accounts[1], gas: 1000000}),
+  deployer.deploy(filledPrescription, 3, 100, 30, 1, 3, (today - (oneDay*18)), (today + (oneDay*12)), accounts[7], {from: accounts[1], gas: 1000000}),
+  deployer.deploy(filledPrescription, 4, 100, 30, 1, 3, (today - (oneDay*16)), (today + (oneDay*14)), accounts[7], {from: accounts[1], gas: 1000000}),
+  deployer.deploy(filledPrescription, 5, 10, 120, 4, 1, (today - (oneDay*4)), (today + (oneDay*26)), accounts[7], {from: accounts[1], gas: 1000000}),
   deployer.deploy(Prescription, 6, 120, 30, 1, {from: accounts[1], gas: 1000000}),
 
   //pharma 1
