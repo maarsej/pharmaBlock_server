@@ -57,14 +57,14 @@ module.exports = (knex) => {
     .then((resultFromSelect) => {
       if (resultFromSelect.length === 1) {
         if (bcrypt.compareSync(req.body.password, resultFromSelect[0].password)) {
-          const payload = {
-            email: req.body.email
-          };
-          const token = jwt.sign(payload, 'secretstring');
+          // const payload = {
+          //   email: req.body.email
+          // };
+          // const token = jwt.sign(payload, 'secretstring');
           res.status(200).json({
             success: true,
             message: 'Successful patient login.',
-            token: token,
+            // token: token,
             userId: resultFromSelect[0].public_address,
             userName: resultFromSelect[0].username,
             userType: 'patient' });
