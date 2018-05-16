@@ -110,7 +110,7 @@ module.exports = (knex) => {
     knex('contracts')  
     .join('generic_drugs', 'generic_drugs.id', 'contracts.drug_id')
     .leftJoin('pharmacos', 'pharmacos.public_address', 'contracts.pharmaco_pubaddr')
-    .select('contracts.public_address as cId', '*')
+    .select('contracts.public_address as cId', 'generic_drugs.name as generic_name', '*')
     .where('contracts.public_address', req.params.cId)
     .then((dbResponse) => {
       if (dbResponse.length > 0) {
@@ -123,7 +123,7 @@ module.exports = (knex) => {
 
   // fill prescription (accept bid)
   router.post('/patients/:public_address/contracts/:oldCId', (req, res) => {
-    block.sign(req.params.oldCId, req.params.public_address, req.body.costPerDose, req.body.startDate, req.body.endDate, req.body.pharma_address)
+    block.sign(req.params.oldCId, req.params.public_address, req.body.costPerDose, req.body.startDate, req.body.endDate, req.body.pharmAddress)
     .then((newCId) => {
       knex('contracts').select('drug_id').where('public_address', req.params.oldCId)
       .then((drugIdResponse) => {
@@ -153,7 +153,7 @@ module.exports = (knex) => {
     knex('contracts')  
     .join('generic_drugs', 'generic_drugs.id', 'contracts.drug_id')
     .leftJoin('pharmacos', 'contracts.pharmaco_pubaddr', 'pharmacos.public_address')
-    .select('contracts.public_address as cId', '*')
+    .select('contracts.public_address as cId', 'generic_drugs.name as generic_name', '*')
     .where('patient_pubaddr', req.params.public_address)
     .then((dbResponse) => {
       if (dbResponse.length > 0) {

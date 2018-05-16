@@ -18,14 +18,14 @@ exports.seed = function(knex, Promise) {
         brand_name: 'Lexibicin',
         price_per_mg: 1,
         image_url: null,
-        generic_id: 6
+        generic_id: 2
       }),
       knex('drugs').insert({
         id: 3,
-        pharmaco_pubaddr: "0xBC56119401f146F5eb3852C2618207349b321062",
+        pharmaco_pubaddr: "0xD00c9661221a448c3D6B97b968363be5A330d722",
         brand_name: 'Diproletra',
         image_url: null,
-        generic_id: 6
+        generic_id: 3
       }),
       knex('drugs').insert({
         id: 4,
@@ -66,7 +66,7 @@ exports.seed = function(knex, Promise) {
         brand_name: 'Alitredizem Isoprotin',
         price_per_mg: 4,
         image_url: null,
-        generic_id: 1
+        generic_id: 3
       }),
       knex('drugs').insert({
         id: 9,
@@ -78,11 +78,11 @@ exports.seed = function(knex, Promise) {
       }),
       knex('drugs').insert({
         id: 10,
-        pharmaco_pubaddr: "0xBC56119401f146F5eb3852C2618207349b321062",
+        pharmaco_pubaddr: "0xD00c9661221a448c3D6B97b968363be5A330d722",
         brand_name: 'Atraxane Kinorabine',
         price_per_mg: 4,
         image_url: null,
-        generic_id: 2
+        generic_id: 4
       }),
       knex('drugs').insert({
         id: 11,
@@ -98,7 +98,7 @@ exports.seed = function(knex, Promise) {
         brand_name: 'Romalamin',
         price_per_mg: 4,
         image_url: null,
-        generic_id: 6
+        generic_id: 3
       }),
       knex('drugs').insert({
         id: 13,
