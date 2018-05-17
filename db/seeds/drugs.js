@@ -167,7 +167,7 @@ exports.seed = function(knex, Promise) {
       }),
 
       knex('drugs').insert({ id: 21, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B', brand_name: 'Ocuclude', price_per_mg: 1, image_url: 'pill5.jpg', generic_id: 3 }),
-      knex('drugs').insert({ id: 22, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Belaxamine', price_per_mg: 1, image_url: 'pinktablet.png ', generic_id: 4  }),
+      knex('drugs').insert({ id: 22, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Belaxamine', price_per_mg: 1, image_url: 'pinktablet.jpg ', generic_id: 4  }),
       knex('drugs').insert({ id: 23, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Dantomumab', price_per_mg: 3, image_url: 'gumimaci.jpg ', generic_id: 5 }),
       knex('drugs').insert({ id: 24, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Ampyferon', price_per_mg: 1, image_url: 'happypill.jpg ', generic_id: 6 }),
       knex('drugs').insert({ id: 25, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Podofoxin', price_per_mg: 1, image_url: 'lightpill.jpg '}),
