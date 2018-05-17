@@ -12,12 +12,12 @@ exports.seed = function (knex, Promise) {
 
         // patient 1
         // deployer.deploy(Prescription, 1, 100, 30, 1, { from: accounts[0], gas: 1000000 }),
-        knex('contracts').insert({
-          public_address: '0xd49bDC6802Acc58931591749607ad08cb13F8e67',
-          patient_pubaddr: accounts[0],
-          drug_id: 2,
-          end_date: null
-        }),
+        // knex('contracts').insert({
+        //   public_address: '0xd49bDC6802Acc58931591749607ad08cb13F8e67',
+        //   patient_pubaddr: accounts[0],
+        //   drug_id: 2,
+        //   end_date: null
+        // }),
         // deployer.deploy(filledPrescription, 2, 55, 60, 2, 3, (today - (oneDay * 6)), (today + (oneDay * 24)), accounts[6], { from: accounts[0], gas: 1000000 }),
         knex('contracts').insert({
           public_address: '0x914B35cCC15aB326c539f8896c25A98B253aF41E',
