@@ -22,7 +22,7 @@ exports.seed = function(knex, Promise) {
         }),
         knex('generic_drugs').insert({
           id: 4,
-          name: 'Millsuximab',
+          name: 'Millsimab',
           description: 'For cancer treatment.'
         }),
         knex('generic_drugs').insert({
