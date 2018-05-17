@@ -241,6 +241,7 @@ module.exports = (knex) => {
     .select('contracts.public_address AS cId', '*')
     .where('contracts.pharmaco_pubaddr', req.params.public_address)
     .andWhere('drugs.pharmaco_pubaddr', req.params.public_address)
+    .orderBy('generic_drugs.name')
     .then((dbResponse) => {
       if (dbResponse.length > 0) {
         sendJSONMergedWithBlockchainInfo(dbResponse, res);
