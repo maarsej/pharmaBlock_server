@@ -207,7 +207,7 @@ module.exports = (knex) => {
   // basic pharmaceutical company product info
   router.get('/pharmacos/:public_address/drugs', (req, res) => {
     knex('drugs')
-      .join('generic_drugs', 'generic_drugs.id', 'drugs.generic_id')
+      .leftJoin('generic_drugs', 'generic_drugs.id', 'drugs.generic_id')
       .where('drugs.pharmaco_pubaddr', req.params.public_address)
       .then(resultFromSelect => res.json(resultFromSelect));
   });

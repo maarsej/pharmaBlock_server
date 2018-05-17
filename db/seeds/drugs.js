@@ -86,28 +86,12 @@ exports.seed = function(knex, Promise) {
         generic_id: 4
       }),
       knex('drugs').insert({
-        id: 11,
-        pharmaco_pubaddr: "0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B",
-        brand_name: 'Clarirolac Adriagine',
-        price_per_mg: 1,
-        image_url: 'pill13.jpg',
-        generic_id: 1
-      }),
-      knex('drugs').insert({
         id: 12,
         pharmaco_pubaddr: "0xBC56119401f146F5eb3852C2618207349b321062",
         brand_name: 'Romalamin',
         price_per_mg: 4,
         image_url: 'pill3.jpg',
         generic_id: 3
-      }),
-      knex('drugs').insert({
-        id: 13,
-        pharmaco_pubaddr: "0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B",
-        brand_name: 'Ocuclude',
-        price_per_mg: 1,
-        image_url: 'pill5.jpg',
-        generic_id: 2
       }),
       knex('drugs').insert({
         id: 14,
@@ -165,8 +149,10 @@ exports.seed = function(knex, Promise) {
         image_url: 'redtablet.jpg',
         generic_id: 2
       }),
-
-      knex('drugs').insert({ id: 21, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B', brand_name: 'Ocuclude', price_per_mg: 1, image_url: 'pill5.jpg', generic_id: 3 }),
+      
+      knex('drugs').insert({ id: 11, pharmaco_pubaddr: "0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B", brand_name: 'Clarirolac Adriagine', price_per_mg: 1, image_url: 'pill13.jpg', generic_id: 1 }),
+      knex('drugs').insert({ id: 13, pharmaco_pubaddr: "0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B", brand_name: 'Apreroban', price_per_mg: 1, image_url: 'glitterpill.jpg', generic_id: 2 }),
+      knex('drugs').insert({ id: 21, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B', brand_name: 'Ocuclude', price_per_mg: 1, image_url: 'colorpill.jpg', generic_id: 3 }),
       knex('drugs').insert({ id: 22, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Belaxamine', price_per_mg: 1, image_url: 'pinktablet.jpg ', generic_id: 4  }),
       knex('drugs').insert({ id: 23, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Dantomumab', price_per_mg: 3, image_url: 'gumimaci.jpg ', generic_id: 5 }),
       knex('drugs').insert({ id: 24, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Ampyferon', price_per_mg: 1, image_url: 'happypill.jpg ', generic_id: 6 }),
@@ -174,7 +160,6 @@ exports.seed = function(knex, Promise) {
       knex('drugs').insert({ id: 26, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Adapaban', price_per_mg: 4, image_url: 'moodpill.jpg '}),
       knex('drugs').insert({ id: 27, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Solanide', price_per_mg: 5, image_url: 'pill11.jpg '}),
       knex('drugs').insert({ id: 28, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Terbinone Declostadil', price_per_mg: 1, image_url: 'pill12.jpg '}),
-      knex('drugs').insert({ id: 29, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Sucprosate Evophilus', price_per_mg: 2, image_url: 'pill13.jpg '}),
       knex('drugs').insert({ id: 30, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Estratana Amoximara', price_per_mg: 5, image_url: 'pill3.jpg '}),
       knex('drugs').insert({ id: 31, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Crotoin Anadine', price_per_mg: 5, image_url: 'pill4.jpg '}),
       knex('drugs').insert({ id: 32, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Acetylgomar', price_per_mg: 2, image_url: 'pill5.jpg '}),
