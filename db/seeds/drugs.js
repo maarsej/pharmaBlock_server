@@ -24,6 +24,7 @@ exports.seed = function(knex, Promise) {
         id: 3,
         pharmaco_pubaddr: "0xD00c9661221a448c3D6B97b968363be5A330d722",
         brand_name: 'Diproletra',
+        price_per_mg: 2,
         image_url: 'colorpill.jpg',
         generic_id: 3
       }),
@@ -163,7 +164,28 @@ exports.seed = function(knex, Promise) {
         price_per_mg: 3,
         image_url: 'redtablet.jpg',
         generic_id: 2
-      })
-    ]);
+      }),
+      knex('drugs').insert({ id: 21, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B', brand_name: 'Ocuclude', price_per_mg: 1, image_url: 'pill5.jpg' }),
+      knex('drugs').insert({ id: 22, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Belaxamine', price_per_mg: 1, image_url: 'Medication.png '}),
+      knex('drugs').insert({ id: 23, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Dantomumab', price_per_mg: 3, image_url: 'gumimaci.jpg '}),
+      knex('drugs').insert({ id: 24, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Ampyferon', price_per_mg: 1, image_url: 'happypill.jpg '}),
+      knex('drugs').insert({ id: 25, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Podofoxin', price_per_mg: 1, image_url: 'lightpill.jpg '}),
+      knex('drugs').insert({ id: 26, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Adapaban', price_per_mg: 4, image_url: 'moodpill.jpg '}),
+      knex('drugs').insert({ id: 27, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Solanide', price_per_mg: 5, image_url: 'pill11.jpg '}),
+      knex('drugs').insert({ id: 28, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Terbinone Declostadil', price_per_mg: 1, image_url: 'pill12.jpg '}),
+      knex('drugs').insert({ id: 29, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Sucprosate Evophilus', price_per_mg: 2, image_url: 'pill13.jpg '}),
+      knex('drugs').insert({ id: 30, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Estratana Amoximara', price_per_mg: 5, image_url: 'pill3.jpg '}),
+      knex('drugs').insert({ id: 31, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Crotoin Anadine', price_per_mg: 5, image_url: 'pill4.jpg '}),
+      knex('drugs').insert({ id: 32, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Acetylgomar', price_per_mg: 2, image_url: 'pill5.jpg '}),
+      knex('drugs').insert({ id: 33, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Factolence', price_per_mg: 5, image_url: 'pill6.jpg '}),
+      knex('drugs').insert({ id: 34, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Acamramine', price_per_mg: 2, image_url: 'pill7.jpg '}),
+      knex('drugs').insert({ id: 35, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Acetylmentin', price_per_mg: 1, image_url: 'pill8.jpg '}),
+      knex('drugs').insert({ id: 36, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Regobazine', price_per_mg: 5, image_url: 'pill9.jpg '}),
+      knex('drugs').insert({ id: 37, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Agelinum', price_per_mg: 2, image_url: 'pinktablet.jpg '}),
+      knex('drugs').insert({ id: 38, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Viganeva Humurenone', price_per_mg: 3, image_url: 'redtablet.jpg '}),
+      knex('drugs').insert({ id: 39, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Palocine Olakeran', price_per_mg: 3, image_url: 'rocketcandy.jpg '}),
+      knex('drugs').insert({ id: 40, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Abacaprotin Pentacline', price_per_mg: 2, image_url: 'rocketpill.jpg '}),
+      knex('drugs').insert({ id: 41, pharmaco_pubaddr: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B' , brand_name: 'Alvederm Fragpion', price_per_mg: 5, image_url: 'rusticpill.jpg '}),
+     ]);
   });
 };

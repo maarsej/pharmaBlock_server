@@ -9,7 +9,7 @@ exports.seed = function(knex, Promise) {
       knex('pharmacos').insert({
         public_address: '0x9abbFB9219b405Fb2B0C89D4f07522CF32001A8B',
         company_name: 'GRIFOLS USA, LLC',
-        contact_name: "Veradis Pinnijar",
+        contact_name: "Thomas Pinnijar",
         email: 'thomas@gmail.com',
         password: bcrypt.hashSync('drugs99', 10)
       }),
