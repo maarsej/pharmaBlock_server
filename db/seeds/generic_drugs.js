@@ -7,32 +7,32 @@ exports.seed = function(knex, Promise) {
         // Inserts seed entries
         knex('generic_drugs').insert({
           id: 1,
-          name: 'Adalimumab',
+          name: 'Husainumab',
           description: 'For autoimmune diseases and moderate to severe active rheumatoid arthritis.'
         }),
         knex('generic_drugs').insert({
           id: 2,
-          name: 'Aflibercept',
+          name: 'Gonzalicept',
           description: 'For use in retinal indications.'
         }),
         knex('generic_drugs').insert({
           id: 3,
-          name: 'Lenalidomide',
+          name: 'Sumiyomide',
           description: 'For treatment of multiple myloma.'
         }),
         knex('generic_drugs').insert({
           id: 4,
-          name: 'Rituximab',
+          name: 'Millsuximab',
           description: 'For cancer treatment.'
         }),
         knex('generic_drugs').insert({
           id: 5,
-          name: 'Etanercept',
+          name: 'Fefercept',
           description: 'For autoimmune diseases including rheumatoid arthritis, psoriasis and other inflammatory conditions.'
         }),
         knex('generic_drugs').insert({
           id: 6,
-          name: 'Trastuzumab',
+          name: 'Tsanguzumab',
           description: 'For treatment of breast and gastric cancer.'
         })
        ]);
