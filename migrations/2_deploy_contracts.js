@@ -28,8 +28,19 @@ module.exports = function(deployer, network, accounts) {
   deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*1)), (today + (oneDay*29)), accounts[5], {from: accounts[0], gas: 1000000}),
   deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*3)), (today + (oneDay*27)), accounts[5], {from: accounts[2], gas: 1000000}),
   deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*5)), (today + (oneDay*25)), accounts[5], {from: accounts[3], gas: 1000000}),
-  deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*7)), (today + (oneDay*23)), accounts[5], {from: accounts[4], gas: 1000000})
-  
+  deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*7)), (today + (oneDay*23)), accounts[5], {from: accounts[4], gas: 1000000}),
+
+  deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*1)), (today - (oneDay*29)), accounts[5], {from: accounts[0], gas: 1000000}),
+  deployer.deploy(filledPrescription, 2, 80, 30, 1, 2, (today - (oneDay*3)), (today - (oneDay*27)), accounts[5], {from: accounts[1], gas: 1000000}),
+  deployer.deploy(filledPrescription, 3, 80, 30, 1, 2, (today - (oneDay*5)), (today - (oneDay*25)), accounts[5], {from: accounts[1], gas: 1000000}),
+  deployer.deploy(filledPrescription, 4, 80, 30, 1, 2, (today - (oneDay*7)), (today - (oneDay*23)), accounts[5], {from: accounts[1], gas: 1000000}),
+  deployer.deploy(filledPrescription, 5, 80, 30, 1, 2, (today - (oneDay*1)), (today - (oneDay*29)), accounts[5], {from: accounts[1], gas: 1000000}),
+  deployer.deploy(filledPrescription, 6, 80, 30, 1, 2, (today - (oneDay*3)), (today - (oneDay*27)), accounts[5], {from: accounts[2], gas: 1000000}),
+  deployer.deploy(filledPrescription, 5, 80, 30, 1, 2, (today - (oneDay*5)), (today - (oneDay*25)), accounts[5], {from: accounts[3], gas: 1000000}),
+  deployer.deploy(filledPrescription, 4, 80, 30, 1, 2, (today - (oneDay*7)), (today - (oneDay*23)), accounts[5], {from: accounts[4], gas: 1000000}),
+  deployer.deploy(filledPrescription, 3, 80, 30, 1, 2, (today - (oneDay*1)), (today - (oneDay*29)), accounts[5], {from: accounts[0], gas: 1000000}),
+  deployer.deploy(filledPrescription, 2, 80, 30, 1, 2, (today - (oneDay*3)), (today - (oneDay*27)), accounts[5], {from: accounts[2], gas: 1000000})
+
 }
 
 // Legend

@@ -134,8 +134,92 @@ exports.seed = function (knex, Promise) {
           pharmaco_pubaddr: accounts[5],
           drug_id: 1,
           end_date: (today + (oneDay * 23))
-        })
+        }),
 
+
+
+
+        // deployer.deploy(filledPrescription, 1, 80, 30, 1, 2, (today - (oneDay*1)), (today - (oneDay*29)), accounts[5], {from: accounts[0], gas: 1000000}),
+        knex('contracts').insert({
+          public_address: '0x38D3aC364d970B2a8C2A4Ff665701b0c87C56d71',
+          patient_pubaddr: accounts[0],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 1,
+          end_date: (today - (oneDay * 29))
+        }),
+        // deployer.deploy(filledPrescription, 2, 80, 30, 1, 2, (today - (oneDay*3)), (today - (oneDay*27)), accounts[5], {from: accounts[1], gas: 1000000}),
+        knex('contracts').insert({
+          public_address: '0x57Fd5035FE4A430bA5799C969eF82D627E592308',
+          patient_pubaddr: accounts[1],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 2,
+          end_date: (today - (oneDay * 27))
+        }),
+        // deployer.deploy(filledPrescription, 3, 80, 30, 1, 2, (today - (oneDay*5)), (today - (oneDay*25)), accounts[5], {from: accounts[1], gas: 1000000}),
+        knex('contracts').insert({
+          public_address: '0x7494FE642eBb8f9EA29170517f99eadaBbeAec27',
+          patient_pubaddr: accounts[1],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 3,
+          end_date: (today - (oneDay * 25))
+        }),
+        // deployer.deploy(filledPrescription, 4, 80, 30, 1, 2, (today - (oneDay*7)), (today - (oneDay*23)), accounts[5], {from: accounts[1], gas: 1000000}),
+        knex('contracts').insert({
+          public_address: '0x62135672DD3b965326F2C9A85bA84B82E3E7949D',
+          patient_pubaddr: accounts[1],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 4,
+          end_date: (today - (oneDay * 23))
+        }),
+        // deployer.deploy(filledPrescription, 5, 80, 30, 1, 2, (today - (oneDay*1)), (today - (oneDay*29)), accounts[5], {from: accounts[1], gas: 1000000}),
+        knex('contracts').insert({
+          public_address: '0x11e89dbfbddafd6ec47EA7000B541e854f529650',
+          patient_pubaddr: accounts[1],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 5,
+          end_date: (today - (oneDay * 29))
+        }),
+        // deployer.deploy(filledPrescription, 6, 80, 30, 1, 2, (today - (oneDay*3)), (today - (oneDay*27)), accounts[5], {from: accounts[2], gas: 1000000}),
+        knex('contracts').insert({
+          public_address: '0xBfC1C0637bC237D4De2AB9AD75E90f6E33552e60',
+          patient_pubaddr: accounts[2],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 6,
+          end_date: (today - (oneDay * 27))
+        }),
+        // deployer.deploy(filledPrescription, 5, 80, 30, 1, 2, (today - (oneDay*5)), (today - (oneDay*25)), accounts[5], {from: accounts[3], gas: 1000000}),
+        knex('contracts').insert({
+          public_address: '0xd446fC2a39322cee80224fc705Ede87492e72a02',
+          patient_pubaddr: accounts[3],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 5,
+          end_date: (today - (oneDay * 25))
+        }),
+        // deployer.deploy(filledPrescription, 4, 80, 30, 1, 2, (today - (oneDay*7)), (today - (oneDay*23)), accounts[5], {from: accounts[4], gas: 1000000}),
+        knex('contracts').insert({
+          public_address: '0x9D32E1eDd6A24bdd639822F3513fFc7542715dc8',
+          patient_pubaddr: accounts[4],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 4,
+          end_date: (today - (oneDay * 23))
+        }),
+        // deployer.deploy(filledPrescription, 3, 80, 30, 1, 2, (today - (oneDay*1)), (today - (oneDay*29)), accounts[5], {from: accounts[0], gas: 1000000}),
+        knex('contracts').insert({
+          public_address: '0x88223Bf092f82A1a51E1dD47B516Af0AE41ff06d',
+          patient_pubaddr: accounts[0],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 3,
+          end_date: (today - (oneDay * 29))
+        }),
+        // deployer.deploy(filledPrescription, 2, 80, 30, 1, 2, (today - (oneDay*3)), (today - (oneDay*27)), accounts[5], {from: accounts[2], gas: 1000000})
+        knex('contracts').insert({
+          public_address: '0xDBc1201357037556b0022fbC92A33731b67CDC95',
+          patient_pubaddr: accounts[1],
+          pharmaco_pubaddr: accounts[5],
+          drug_id: 2,
+          end_date: (today - (oneDay * 29))
+        })
+        
       ]);
     });
 };
